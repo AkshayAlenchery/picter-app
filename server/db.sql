@@ -4,7 +4,7 @@ CREATE TABLE posts
   caption TEXT DEFAULT '', 
   image_urls TEXT [] NOT NULL,
   posted_by INTEGER NOT NULL,
-  posted_on TIMESTAMP NOT NULL,
+  posted_on VARCHAR(255) NOT NULL,
   like_count INTEGER DEFAULT 0,
   comment_count INTEGER DEFAULT 0
 );
