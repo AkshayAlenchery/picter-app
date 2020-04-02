@@ -1,9 +1,12 @@
 const Express = require('express')
 const dotenv = require('dotenv')
+const AppRouter = require('./routes/index')
 const App = Express()
 
 dotenv.config()
 App.use(Express.json())
+
+App.use('/picter/api/', AppRouter)
 
 App.listen(process.env.APP_PORT, () => {
   console.log(`Server runnin on port ${process.env.APP_PORT}`)
