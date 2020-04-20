@@ -1,10 +1,10 @@
 const Router = require('express').Router()
-const { addNewPost, uploadImages } = require('../controllers/post')
+const { createNewPost, uploadImages } = require('../controllers/post')
 
-// Add new post
-Router.post('/', addNewPost)
+// Create a new post
+Router.post('/', createNewPost)
 
 // Upload images
-Router.post('/upload/images', uploadImages)
+Router.post('/upload', uploadImages)
 
 module.exports = Router
