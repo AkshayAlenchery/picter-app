@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import './assets/index.css'
 
 const App = () => {
   return <h1>Hello Akshay</h1>
