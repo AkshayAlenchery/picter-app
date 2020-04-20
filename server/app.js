@@ -7,6 +7,7 @@ dotenv.config()
 App.use(Express.json())
 
 App.use('/picter/api/', AppRouter)
+App.use('/picter/api/image', Express.static('uploads'))
 
 App.listen(process.env.APP_PORT, () => {
   console.log(`Server runnin on port ${process.env.APP_PORT}`)
