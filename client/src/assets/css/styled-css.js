@@ -1,0 +1,79 @@
+import styled, { css } from 'styled-components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+/**
+ * Card component styles
+ */
+export const Card = styled.section`
+  background: #fff;
+  border: 1px solid #dddfe2;
+  border-radius: 3px;
+  margin: 0;
+`
+
+export const CardHeader = styled.header`
+  background: #f5f6f7;
+  border-radius: 3px 3px 0 0;
+  padding: 10px;
+  margin: 0;
+`
+
+export const CardTitle = styled.p`
+  margin: 0;
+  color: #504f52;
+  font-size: 0.9em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+`
+
+export const CardBody = styled.div`
+  padding: 10px;
+  margin: 0;
+`
+
+/**
+ * Font awesome icons
+ */
+export const Icon = styled(FontAwesomeIcon)`
+  font-size: ${(props) => props.fontSize};
+  color: ${(props) => props.color};
+  margin: 0;
+`
+
+/**
+ * Blue Button
+ */
+export const Btn = styled.button`
+  padding: ${(props) => props.padding};
+  width: ${(props) => props.width};
+  font-size: 0.8em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #333;
+  border-radius: 3px;
+  cursor: pointer;
+  background: #f5f6f7;
+  border: 1px solid #ccd0d5;
+  &:disabled {
+    background: #eae8ec;
+    cursor: default;
+  }
+  &:hover {
+    background: #e7e7e7;
+  }
+  ${(props) =>
+    props.blue &&
+    css`
+      background: #4168b4;
+      border: 1px solid #4168b4;
+      color: white;
+      &:hover {
+        background: #365899;
+      }
+      &:disabled {
+        background: #9db7d2;
+        border: 1px solid #9db7d2;
+        cursor: default;
+      }
+    `};
+`
