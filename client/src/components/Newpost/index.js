@@ -1,10 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import Axios from 'axios'
+import { v4 as uuid } from 'uuid'
+
 import { Card, CardHeader, CardTitle, CardBody, Icon, Btn } from '../../assets/css/styled-css'
 import { Caption, PreviewCont } from './style'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
 import { BASE_URL } from '../../config'
 import PreviewImage from './preview-image'
+import { Context as NotificationContext } from '../../context/NotificationContext'
+import { ADD_NOTI } from '../../context/actionTypes'
 
 export default (props) => {
   /**
@@ -19,6 +23,7 @@ export default (props) => {
     files: []
   })
   const [upldStatus, setUpldStatus] = useState(false) // True - Completed | False - Uploading
+  const { dispatch } = useContext(NotificationContext)
 
   // Ref to select files
   const fileInp = useRef(null)
@@ -42,8 +47,15 @@ export default (props) => {
     const flLeng = files.length
     if (!flLeng) return
     if (flLeng > 10 || fileCount - flLeng < 0) {
-      console.log('Cannot upload more pics')
-      // Set errors here
+      dispatch({
+        action: ADD_NOTI,
+        data: {
+          id: uuid(),
+          type: 'error',
+          message: 'Cannot upload more than 10 images.',
+          color: 'red'
+        }
+      })
     } else {
       setFileCount(fileCount - flLeng)
       const formData = new FormData()
@@ -59,8 +71,25 @@ export default (props) => {
           onUploadProgress: (event) => console.log(Math.round((event.loaded / event.total) * 100))
         })
         setUpldFiles({ files: [...result.data.images, ...upldFiles.files] })
+        dispatch({
+          action: ADD_NOTI,
+          data: {
+            id: uuid(),
+            type: 'success',
+            message: 'Images uploaded successfully.',
+            color: 'green'
+          }
+        })
       } catch (err) {
-        console.log(err)
+        dispatch({
+          action: ADD_NOTI,
+          data: {
+            id: uuid(),
+            type: 'error',
+            message: 'Failed to upload images. Please try again later.',
+            color: 'red'
+          }
+        })
         setFileCount(fileCount + flLeng)
       }
     }
@@ -81,8 +110,25 @@ export default (props) => {
       tempFiles.splice(index, 1)
       setFileCount(fileCount + 1)
       setUpldFiles({ files: tempFiles })
+      dispatch({
+        action: ADD_NOTI,
+        data: {
+          id: uuid(),
+          type: 'success',
+          message: 'Image removed successfully.',
+          color: 'green'
+        }
+      })
     } catch (err) {
-      console.log(err)
+      dispatch({
+        action: ADD_NOTI,
+        data: {
+          id: uuid(),
+          type: 'error',
+          message: 'Failed to remove picture. Please try again later.',
+          color: 'red'
+        }
+      })
     }
   }
 
@@ -103,10 +149,28 @@ export default (props) => {
       })
       setUpldFiles({ files: [] })
       setFileCount(10)
-      console.log(result.data)
+      setCaption('')
+      dispatch({
+        action: ADD_NOTI,
+        data: {
+          id: uuid(),
+          type: 'success',
+          message: 'Post created successfully.',
+          color: 'green'
+        }
+      })
       // save to state
+      console.log(result.data)
     } catch (err) {
-      console.log(err)
+      dispatch({
+        action: ADD_NOTI,
+        data: {
+          id: uuid(),
+          type: 'error',
+          message: 'Could not create a new post. Please try again later.',
+          color: 'red'
+        }
+      })
     }
   }
 

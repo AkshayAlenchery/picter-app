@@ -1,0 +1,32 @@
+#noti-container {
+  width: 300px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+p {
+  margin: 0;
+}
+
+#noti-container > * {
+  margin-bottom: 7px !important;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  min-height: 25px;
+  justify-content: space-between;
+}
+
+.notification svg {
+  width: 20px !important;
+  align-self: center;
+}
+
+.notification p {
+  width: 220px;
+  margin: 0;
+  font-size: 0.8em;
+}
