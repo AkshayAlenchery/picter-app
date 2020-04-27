@@ -9,6 +9,13 @@ export const Card = styled.section`
   border: 1px solid #dddfe2;
   border-radius: 3px;
   margin: 0;
+  ${(props) =>
+    props.shadow &&
+    css`
+      -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 64, 128, 0.15);
+      -moz-box-shadow: 0px 0px 10px 0px rgba(0, 64, 128, 0.15);
+      box-shadow: 0px 0px 10px 0px rgba(0, 64, 128, 0.15);
+    `}
 `
 
 export const CardHeader = styled.header`
