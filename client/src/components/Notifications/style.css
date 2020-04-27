@@ -1,8 +1,10 @@
-#noti-container {
-  width: 300px;
-  position: absolute;
-  top: 20px;
-  right: 20px;
+@media (min-width: 350px) {
+  #noti-container {
+    width: 300px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
 }
 
 p {
@@ -29,4 +31,12 @@ p {
   width: 220px;
   margin: 0;
   font-size: 0.8em;
+}
+
+@media (max-width: 350px) {
+  #noti-container {
+    width: 95%;
+    position: absolute;
+    top: 20px;
+  }
 }
