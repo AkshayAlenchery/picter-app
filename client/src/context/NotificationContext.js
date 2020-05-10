@@ -21,6 +21,8 @@ export const Context = createContext()
 
 // Notification Provider
 export const Provider = (props) => {
-  const [notifications, dispatch] = useReducer(reducer, initialState)
-  return <Context.Provider value={{ notifications, dispatch }}>{props.children}</Context.Provider>
+  const [notifications, setNotification] = useReducer(reducer, initialState)
+  return (
+    <Context.Provider value={{ notifications, setNotification }}>{props.children}</Context.Provider>
+  )
 }

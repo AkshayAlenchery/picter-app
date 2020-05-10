@@ -23,7 +23,7 @@ export default (props) => {
     files: []
   })
   const [upldStatus, setUpldStatus] = useState(false) // True - Completed | False - Uploading
-  const { dispatch } = useContext(NotificationContext)
+  const { setNotification } = useContext(NotificationContext)
 
   // Ref to select files
   const fileInp = useRef(null)
@@ -47,7 +47,7 @@ export default (props) => {
     const flLeng = files.length
     if (!flLeng) return
     if (flLeng > 10 || fileCount - flLeng < 0) {
-      dispatch({
+      setNotification({
         action: ADD_NOTI,
         data: {
           id: uuid(),
@@ -71,7 +71,7 @@ export default (props) => {
           onUploadProgress: (event) => console.log(Math.round((event.loaded / event.total) * 100))
         })
         setUpldFiles({ files: [...result.data.images, ...upldFiles.files] })
-        dispatch({
+        setNotification({
           action: ADD_NOTI,
           data: {
             id: uuid(),
@@ -81,7 +81,7 @@ export default (props) => {
           }
         })
       } catch (err) {
-        dispatch({
+        setNotification({
           action: ADD_NOTI,
           data: {
             id: uuid(),
@@ -110,7 +110,7 @@ export default (props) => {
       tempFiles.splice(index, 1)
       setFileCount(fileCount + 1)
       setUpldFiles({ files: tempFiles })
-      dispatch({
+      setNotification({
         action: ADD_NOTI,
         data: {
           id: uuid(),
@@ -120,7 +120,7 @@ export default (props) => {
         }
       })
     } catch (err) {
-      dispatch({
+      setNotification({
         action: ADD_NOTI,
         data: {
           id: uuid(),
@@ -150,7 +150,7 @@ export default (props) => {
       setUpldFiles({ files: [] })
       setFileCount(10)
       setCaption('')
-      dispatch({
+      setNotification({
         action: ADD_NOTI,
         data: {
           id: uuid(),
@@ -162,7 +162,7 @@ export default (props) => {
       // save to state
       console.log(result.data)
     } catch (err) {
-      dispatch({
+      setNotification({
         action: ADD_NOTI,
         data: {
           id: uuid(),
