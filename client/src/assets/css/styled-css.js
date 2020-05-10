@@ -45,6 +45,16 @@ export const Icon = styled(FontAwesomeIcon)`
   font-size: ${(props) => props.fontSize};
   color: ${(props) => props.color};
   margin: 0;
+  ${(props) =>
+    props.blend &&
+    css`
+      mix-blend-mode: difference;
+    `}
+  ${(props) =>
+    props.cursor &&
+    css`
+      cursor: pointer;
+    `}
 `
 
 /**
