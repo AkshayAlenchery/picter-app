@@ -1,0 +1,82 @@
+header {
+  background: #4168b4;
+  margin: 0;
+  height: 4em;
+  position: fixed;
+  width: 100%;
+  color: #fff;
+}
+
+.container {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 960px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: inherit;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.65rem;
+  letter-spacing: 0.1rem;
+}
+
+.dropdown {
+  margin-top: 1em;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropdown-header img {
+  width: 2em;
+  height: 2em;
+  border-radius: 3px;
+}
+
+.dropdown-header p {
+  margin: 0 0.5em;
+  font-size: 0.9rem;
+}
+
+.dropdown-list {
+  margin-top: 0.5em;
+  background: white;
+  border-radius: 3px;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 64, 128, 0.15);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 64, 128, 0.15);
+  box-shadow: 0px 0px 10px 0px rgba(0, 64, 128, 0.15);
+}
+
+.dropdown-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.dropdown-list li {
+  margin: 0;
+  padding: 0.5em 2em;
+  border-radius: 3px;
+  border-bottom: 1px solid #f7f7f7;
+}
+
+.dropdown-list li:hover {
+  background: #f7f7f7;
+}
+
+.dropdown-list a {
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+}
