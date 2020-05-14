@@ -1,3 +1,11 @@
+CREATE TABLE likes
+(
+  like_id SERIAL PRIMARY KEY,
+  post_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  liked_on VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE posts
 (
   post_id SERIAL PRIMARY KEY,
@@ -20,6 +28,7 @@ CREATE TABLE users
   gender VARCHAR(6) NOT NULL,
   city VARCHAR(100) DEFAULT '',
   bio TEXT DEFAULT '',
+  profile_pic TEXT DEFAULT '',
   followers INTEGER DEFAULT 0,
   following INTEGER DEFAULT 0,
   registered_on VARCHAR(255) NOT NULL
