@@ -1,0 +1,43 @@
+.container {
+  max-width: 900px;
+  width: 90%;
+}
+
+.main-contents {
+  width: 100%;
+  margin-top: 4.5em;
+}
+
+.contents {
+  width: 100%;
+}
+
+.sidebar {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .main-contents {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .contents {
+    width: 66%;
+  }
+
+  .sidebar {
+    display: block;
+    width: 27%;
+    background: white;
+    padding: 20px;
+  }
+}
+
+.muted-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #65676b;
+  padding: 0.1em;
+}

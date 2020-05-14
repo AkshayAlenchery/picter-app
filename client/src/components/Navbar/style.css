@@ -1,10 +1,11 @@
-header {
+.header {
   background: #4168b4;
   margin: 0;
-  height: 4em;
+  height: 3.5em;
   position: fixed;
   width: 100%;
   color: #fff;
+  z-index: 1000;
 }
 
 .container {
@@ -24,7 +25,7 @@ header {
 }
 
 .dropdown {
-  margin-top: 1em;
+  margin-top: 0.75em;
   align-self: flex-start;
   display: flex;
   flex-direction: column;
