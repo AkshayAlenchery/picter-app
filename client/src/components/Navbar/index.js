@@ -7,7 +7,7 @@ import './style.css'
 export default (props) => {
   const [showDropdown, setDropdown] = useState(false)
   return (
-    <header>
+    <header className='header'>
       <div className='container'>
         <h1 className='logo'>Picter</h1>
         <div className='dropdown'>

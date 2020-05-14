@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import moment from 'moment'
 
 import { Card, CardBody, Icon } from '../../assets/css/styled-css'
 import {
@@ -8,62 +9,87 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as like, faComment, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import './style.css'
+import avatar from '../../assets/images/avatar.jpg'
 
-const PreviewContainer = ({ image, left, right }) => {
+import { Context as PostContext } from '../../context/PostContext'
+
+const PreviewContainer = ({ image, left, right, single }) => {
   return (
     <div className='preview-container'>
       <img src={image} />
-      <div className='preview-actions'>
-        <Icon color='black' fontSize='1.2rem' icon={faChevronCircleLeft} onClick={left} cursor />
-        <Icon color='black' fontSize='1.2rem' icon={faChevronCircleRight} onClick={right} cursor />
-      </div>
+      {!single ? (
+        <div className='preview-actions'>
+          <Icon color='black' fontSize='1.2rem' icon={faChevronCircleLeft} onClick={left} cursor />
+          <Icon
+            color='black'
+            fontSize='1.2rem'
+            icon={faChevronCircleRight}
+            onClick={right}
+            cursor
+          />
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
 
-export default ({ post }) => {
+export default ({ postId }) => {
   /**
    * showIndex: Index of the image to be shown in the post
    */
   const [showIndex, setShowIndex] = useState(0)
+  // Post context
+  const { posts } = useContext(PostContext)
 
   const moveLeft = () => {
     if (showIndex > 0) setShowIndex(showIndex - 1)
-    else setShowIndex(post.post_images.length - 1)
+    else setShowIndex(posts.posts.contents[postId].images.length - 1)
   }
 
   const moveRight = () => {
-    if (showIndex < post.post_images.length - 1) setShowIndex(showIndex + 1)
+    if (showIndex < posts.posts.contents[postId].images.length - 1) setShowIndex(showIndex + 1)
     else setShowIndex(0)
   }
 
   return (
-    <Card>
+    <Card bottom='0.5em'>
       <CardBody>
         <div className='post-header'>
           <div className='profile-pic'>
             <img
-              src='https://www.getuppeople.com/upload/photo/users_profile/2419_.jpg'
-              alt={post.username}
+              src={posts.users[posts.posts.contents[postId].author].avatar || avatar}
+              alt={posts.users[posts.posts.contents[postId].author].username}
             />
           </div>
           <div className='user-details'>
             <a href='#'>
-              {post.firstname} {post.lastname}
+              {posts.users[posts.posts.contents[postId].author].firstname}{' '}
+              {posts.users[posts.posts.contents[postId].author].lastname}
             </a>
-            <p>15 hours ago</p>
+            <p>{moment(new Date(Number(posts.posts.contents[postId].timestamp))).fromNow()}</p>
           </div>
         </div>
-        <PreviewContainer image={post.post_images[showIndex]} left={moveLeft} right={moveRight} />
+        <p className='caption'>{posts.posts.contents[postId].caption}</p>
+        <PreviewContainer
+          image={posts.posts.contents[postId].images[showIndex]}
+          left={moveLeft}
+          right={moveRight}
+          single={posts.posts.contents[postId].images.length === 1 ? true : false}
+        />
         <div className='post-actions'>
           <p>
-            <Icon color={post.liked ? 'red' : 'black'} icon={post.liked ? liked : like} />{' '}
-            {post.likes}
+            <Icon
+              color={posts.posts.contents[postId].liked ? 'red' : 'black'}
+              icon={posts.posts.contents[postId].liked ? liked : like}
+            />{' '}
+            {posts.posts.contents[postId].likes}
           </p>
           <p>
-            <Icon color='black' icon={faComment} /> {post.comments}
+            <Icon color='black' icon={faComment} /> {posts.posts.contents[postId].comments}
           </p>
-          {post.userId === '1234' ? ( // Check loggedUser
+          {posts.posts.contents[postId].userId === 1 ? ( // Check loggedUser
             <p>
               <Icon color='red' icon={faTrashAlt} />
             </p>

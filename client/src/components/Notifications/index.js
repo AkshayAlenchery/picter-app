@@ -35,9 +35,11 @@ export default () => {
   const { notifications, setNotification } = useContext(NotificationContext)
   return (
     <div id='noti-container'>
-      {notifications.map((row) => (
-        <Notification notification={row} key={row.id} dispatch={setNotification} />
-      ))}
+      <div id='contents'>
+        {notifications.map((row) => (
+          <Notification notification={row} key={row.id} dispatch={setNotification} />
+        ))}
+      </div>
     </div>
   )
 }

@@ -7,8 +7,10 @@ import { Caption, PreviewCont } from './style'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
 import { BASE_URL } from '../../config'
 import PreviewImage from './preview-image'
+
+import { Context as PostContext } from '../../context/PostContext'
 import { Context as NotificationContext } from '../../context/NotificationContext'
-import { ADD_NOTI } from '../../context/actionTypes'
+import { ADD_NOTI, ADD_POST } from '../../context/actionTypes'
 
 export default (props) => {
   /**
@@ -24,6 +26,7 @@ export default (props) => {
   })
   const [upldStatus, setUpldStatus] = useState(false) // True - Completed | False - Uploading
   const { setNotification } = useContext(NotificationContext)
+  const { setPost } = useContext(PostContext)
 
   // Ref to select files
   const fileInp = useRef(null)
@@ -110,15 +113,6 @@ export default (props) => {
       tempFiles.splice(index, 1)
       setFileCount(fileCount + 1)
       setUpldFiles({ files: tempFiles })
-      setNotification({
-        action: ADD_NOTI,
-        data: {
-          id: uuid(),
-          type: 'success',
-          message: 'Image removed successfully.',
-          color: 'green'
-        }
-      })
     } catch (err) {
       setNotification({
         action: ADD_NOTI,
@@ -147,6 +141,19 @@ export default (props) => {
           images: upldFiles.files
         }
       })
+      // Set user from logged in user
+      result.data.post.users = {
+        1: {
+          username: 'akshayalenchery',
+          firstname: 'Akshay',
+          lastname: 'Alenchery',
+          avatar: ''
+        }
+      }
+      setPost({
+        action: ADD_POST,
+        data: result.data.post
+      })
       setUpldFiles({ files: [] })
       setFileCount(10)
       setCaption('')
@@ -159,7 +166,6 @@ export default (props) => {
           color: 'green'
         }
       })
-      // save to state
       console.log(result.data)
     } catch (err) {
       setNotification({
@@ -175,7 +181,7 @@ export default (props) => {
   }
 
   return (
-    <Card>
+    <Card bottom='0.5em'>
       <CardHeader>
         <CardTitle>Create a post</CardTitle>
       </CardHeader>
