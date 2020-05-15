@@ -147,4 +147,47 @@ const getUserPosts = async (req, res) => {
   }
 }
 
-module.exports = { createNewPost, uploadImages, deleteImage, getUserPosts }
+/**
+ * Like a post
+ * @param req { body: postId }
+ * @param res
+ * @returns Error | like details
+ */
+const likePost = async (req, res) => {
+  const { postId } = req.body
+  const loggedUserId = 1 // Fetch from login status
+  try {
+    let stmt =
+      'INSERT INTO likes (post_id, user_id, liked_on) VALUES ($1, $2, $3) returning like_id'
+    let result = await pool.query(stmt, [postId, loggedUserId, Date.now()])
+    const resp = { id: result.rows[0].like_id, likes: 0 }
+    stmt = 'UPDATE posts SET like_count = like_count + 1 WHERE post_id = $1 RETURNING like_count'
+    result = await pool.query(stmt, [postId])
+    resp.likes = result.rows[0].like_count
+    return res.status(200).json({ message: 'Post liked', content: resp })
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while liking the post. PLease try again later' })
+  }
+}
+
+const unlikePost = async (req, res) => {
+  const { likeId } = req.body
+  try {
+    let stmt = 'DELETE FROM likes WHERE like_id = $1 RETURNING *'
+    let result = await pool.query(stmt, [likeId])
+    stmt = 'UPDATE posts SET like_count = like_count - 1 WHERE post_id = $1 RETURNING like_count'
+    result = await pool.query(stmt, [result.rows[0].post_id])
+    return res.status(200).json({
+      message: 'Post unliked',
+      content: { liked: false, likes: result.rows[0].like_count }
+    })
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while unliking the post. PLease try again later' })
+  }
+}
+
+module.exports = { createNewPost, uploadImages, deleteImage, getUserPosts, likePost, unlikePost }
