@@ -160,7 +160,7 @@ const likePost = async (req, res) => {
     let stmt =
       'INSERT INTO likes (post_id, user_id, liked_on) VALUES ($1, $2, $3) returning like_id'
     let result = await pool.query(stmt, [postId, loggedUserId, Date.now()])
-    const resp = { id: result.rows[0].like_id, likes: 0 }
+    const resp = { liked: result.rows[0].like_id, likes: 0 }
     stmt = 'UPDATE posts SET like_count = like_count + 1 WHERE post_id = $1 RETURNING like_count'
     result = await pool.query(stmt, [postId])
     resp.likes = result.rows[0].like_count
