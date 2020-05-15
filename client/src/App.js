@@ -5,8 +5,8 @@ import HomePage from './pages/Homepage'
 import './assets/css/index.css'
 import Notifications from './components/Notifications'
 
-import { Provider as NotifcationProvider } from './context/NotificationContext'
-import { Provider as PostProvider } from './context/PostContext'
+import { Provider as NotifcationProvider } from './context/Notification'
+import { Provider as PostProvider } from './context/Post'
 
 export default (props) => {
   return (

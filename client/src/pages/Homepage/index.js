@@ -8,8 +8,8 @@ import Post from '../../components/Post'
 import './style.css'
 import { BASE_URL } from '../../config'
 
-import { Context as NotificationContext } from '../../context/NotificationContext'
-import { Context as PostContext } from '../../context/PostContext'
+import { Context as NotificationContext } from '../../context/Notification'
+import { Context as PostContext } from '../../context/Post'
 import { ADD_NOTI, SET_POSTS } from '../../context/actionTypes'
 
 export default (props) => {

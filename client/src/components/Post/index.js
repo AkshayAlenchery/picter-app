@@ -1,17 +1,22 @@
 import React, { useState, useContext } from 'react'
 import moment from 'moment'
-
-import { Card, CardBody, Icon } from '../../assets/css/styled-css'
+import { v1 as genId } from 'uuid'
+import Axios from 'axios'
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
   faHeart as liked
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as like, faComment, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+
+import { Card, CardBody, Icon } from '../../assets/css/styled-css'
 import './style.css'
 import avatar from '../../assets/images/avatar.jpg'
+import { BASE_URL } from '../../config'
 
-import { Context as PostContext } from '../../context/PostContext'
+import { Context as PostContext } from '../../context/Post'
+import { Context as NotificationContext } from '../../context/Notification'
+import { ADD_NOTI, LIKE_POST, UNLIKE_POST } from '../../context/actionTypes'
 
 const PreviewContainer = ({ image, left, right, single }) => {
   return (
@@ -41,16 +46,84 @@ export default ({ postId }) => {
    */
   const [showIndex, setShowIndex] = useState(0)
   // Post context
-  const { posts } = useContext(PostContext)
+  const { posts, setPost } = useContext(PostContext)
+  const { setNotification } = useContext(NotificationContext)
 
+  // Preview container left
   const moveLeft = () => {
     if (showIndex > 0) setShowIndex(showIndex - 1)
     else setShowIndex(posts.posts.contents[postId].images.length - 1)
   }
-
+  // Preview container right
   const moveRight = () => {
     if (showIndex < posts.posts.contents[postId].images.length - 1) setShowIndex(showIndex + 1)
     else setShowIndex(0)
+  }
+
+  // Like post
+  const likePost = async () => {
+    try {
+      const resp = await Axios({
+        method: 'POST',
+        url: `${BASE_URL}/post/like`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          postId: postId
+        }
+      })
+      setPost({
+        action: LIKE_POST,
+        data: {
+          postId: postId,
+          ...resp.data.content
+        }
+      })
+    } catch (err) {
+      setNotification({
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: 'Could not like the post. Try again later',
+          type: 'error',
+          color: 'red'
+        }
+      })
+    }
+  }
+
+  // Unlike post
+  const unLikePost = async () => {
+    try {
+      const resp = await Axios({
+        method: 'DELETE',
+        url: `${BASE_URL}/post/unlike`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          likeId: posts.posts.contents[postId].liked
+        }
+      })
+      setPost({
+        action: UNLIKE_POST,
+        data: {
+          postId: postId,
+          ...resp.data.content
+        }
+      })
+    } catch (err) {
+      setNotification({
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: 'Could not unlike the post. Try again later',
+          type: 'error',
+          color: 'red'
+        }
+      })
+    }
   }
 
   return (
@@ -80,10 +153,11 @@ export default ({ postId }) => {
         />
         <div className='post-actions'>
           <p>
-            <Icon
-              color={posts.posts.contents[postId].liked ? 'red' : 'black'}
-              icon={posts.posts.contents[postId].liked ? liked : like}
-            />{' '}
+            {posts.posts.contents[postId].liked ? (
+              <Icon color='red' icon={liked} onClick={unLikePost} />
+            ) : (
+              <Icon color='black' icon={like} onClick={likePost} />
+            )}{' '}
             {posts.posts.contents[postId].likes}
           </p>
           <p>

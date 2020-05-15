@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react'
-import { ADD_POST, SET_POSTS } from './actionTypes'
+import { ADD_POST, SET_POSTS, LIKE_POST, UNLIKE_POST } from './actionTypes'
 
 const initialState = {
   posts: {
@@ -12,6 +12,7 @@ const initialState = {
 
 // Reducer
 const reducer = (state, payload) => {
+  console.log(payload)
   switch (payload.action) {
     case ADD_POST:
       return {
@@ -42,6 +43,24 @@ const reducer = (state, payload) => {
           ...payload.data.users
         },
         comments: { ...state.comments, ...payload.data.comments }
+      }
+    case LIKE_POST:
+    case UNLIKE_POST:
+      return {
+        posts: {
+          ...state.posts,
+          contents: {
+            ...state.posts.contents,
+            [payload.data.postId]: {
+              ...state.posts.contents[payload.data.postId],
+              likes: payload.data.likes,
+              liked: payload.data.liked
+            }
+          },
+          ids: [...state.posts.ids]
+        },
+        users: { ...state.users },
+        comments: { ...state.comments }
       }
     default:
       return state

@@ -8,8 +8,8 @@ import { faImage } from '@fortawesome/free-solid-svg-icons'
 import { BASE_URL } from '../../config'
 import PreviewImage from './preview-image'
 
-import { Context as PostContext } from '../../context/PostContext'
-import { Context as NotificationContext } from '../../context/NotificationContext'
+import { Context as PostContext } from '../../context/Post'
+import { Context as NotificationContext } from '../../context/Notification'
 import { ADD_NOTI, ADD_POST } from '../../context/actionTypes'
 
 export default (props) => {
