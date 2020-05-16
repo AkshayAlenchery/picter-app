@@ -1,0 +1,85 @@
+.comment-container {
+  border-top: 1px solid #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8em;
+  padding-top: 0.8em;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 0.5em;
+}
+
+.comment img {
+  width: 2em;
+  height: 2em;
+  border-radius: 5px;
+}
+
+.comment-contents {
+  margin-left: 0.5em;
+}
+
+.comment-user a {
+  font-size: 0.9rem;
+  color: #4268b4;
+  text-decoration: none;
+  margin-right: 0.2em;
+  font-weight: 500;
+}
+
+.comment-user a:hover {
+  text-decoration: underline;
+}
+
+.comment-text {
+  margin-top: 0.2em;
+  font-size: 0.77rem;
+  letter-spacing: 0.02rem;
+}
+
+.comment-footer {
+  display: flex;
+  padding-top: 0.3em;
+  align-items: center;
+}
+
+.comment-time {
+  color: #919ba4;
+  font-size: 0.7rem;
+}
+
+.comment-delete {
+  color: red;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.split {
+  border: 1px solid #666;
+  margin: 0 0.3em;
+  border-radius: 50%;
+}
+
+.comment-delete:hover {
+  text-decoration: underline;
+}
+
+.comment-container input {
+  margin-top: 0.5em;
+  border: 1px solid #d3d3d3;
+  padding: 0.8em;
+}
+
+.comment-balance {
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-bottom: 0.3em;
+  margin-left: 0.2em;
+  color: #4268b4;
+}
+
+.comment-balance:hover {
+  text-decoration: underline;
+}

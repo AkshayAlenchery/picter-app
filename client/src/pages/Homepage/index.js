@@ -19,6 +19,8 @@ export default (props) => {
   const { posts, setPost } = useContext(PostContext)
   // State to store id of last post
   const [currentId, setCurrentId] = useState(0)
+  // State for no more post
+  const [loadMore, setLoadMore] = useState(true)
 
   // Load all posts
   useEffect(() => {
@@ -35,6 +37,7 @@ export default (props) => {
             current: currentId
           }
         })
+        if (!result.data.posts.ids.length) return setLoadMore(false)
         setPost({
           action: SET_POSTS,
           data: result.data
@@ -64,6 +67,15 @@ export default (props) => {
               <p class='muted-text'>No posts to show</p>
             ) : (
               posts.posts.ids.map((id) => <Post key={id} postId={id} />)
+            )}
+            {loadMore ? (
+              <div className='load-posts'>
+                <p onClick={() => setCurrentId(posts.posts.ids[posts.posts.ids.length - 1])}>
+                  Load more posts
+                </p>
+              </div>
+            ) : (
+              ''
             )}
           </div>
           <div className='sidebar'>

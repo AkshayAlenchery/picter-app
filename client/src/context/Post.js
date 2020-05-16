@@ -1,5 +1,13 @@
 import React, { createContext, useReducer } from 'react'
-import { ADD_POST, SET_POSTS, LIKE_POST, UNLIKE_POST } from './actionTypes'
+import {
+  ADD_POST,
+  SET_POSTS,
+  LIKE_POST,
+  UNLIKE_POST,
+  ADD_COMMENT,
+  SET_COMMENTS,
+  DELETE_COMMENT
+} from './actionTypes'
 
 const initialState = {
   posts: {
@@ -62,9 +70,70 @@ const reducer = (state, payload) => {
         users: { ...state.users },
         comments: { ...state.comments }
       }
+    case ADD_COMMENT:
+      return {
+        posts: {
+          contents: {
+            ...state.posts.contents,
+            [payload.data.postId]: {
+              ...state.posts.contents[payload.data.postId],
+              comments: payload.data.comments,
+              commentIds: [
+                ...state.posts.contents[payload.data.postId].commentIds,
+                ...payload.data.comment_ids
+              ]
+            }
+          },
+          ids: [...state.posts.ids]
+        },
+        users: { ...state.users, ...payload.data.user },
+        comments: { ...state.comments, ...payload.data.comment }
+      }
+    case SET_COMMENTS:
+      return {
+        posts: {
+          contents: {
+            ...state.posts.contents,
+            [payload.data.postId]: {
+              ...state.posts.contents[payload.data.postId],
+              commentIds: [
+                ...payload.data.commentIds,
+                ...state.posts.contents[payload.data.postId].commentIds
+              ]
+            }
+          },
+          ids: [...state.posts.ids]
+        },
+        comments: { ...state.comments, ...payload.data.comments },
+        users: { ...state.users, ...payload.data.users }
+      }
+
+    case DELETE_COMMENT:
+      return {
+        posts: {
+          ...state.posts,
+          contents: {
+            ...state.posts.contents,
+            [payload.data.postId]: {
+              ...state.posts.contents[payload.data.postId],
+              comments: payload.data.comments,
+              commentIds: state.posts.contents[payload.data.postId].commentIds.filter(
+                (id) => id !== payload.data.commentId
+              )
+            }
+          }
+        },
+        users: { ...state.users },
+        comments: deleteComment(payload.data.commentId, state.comments)
+      }
     default:
       return state
   }
+}
+
+const deleteComment = (commentId, { ...comments }) => {
+  delete comments[commentId]
+  return comments
 }
 
 // Context for posts

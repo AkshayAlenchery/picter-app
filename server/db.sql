@@ -1,3 +1,12 @@
+CREATE TABLE comments 
+(
+  comment_id SERIAL PRIMARY KEY,
+  post_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  comment TEXT NOT NULL,
+  commented_on VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE likes
 (
   like_id SERIAL PRIMARY KEY,

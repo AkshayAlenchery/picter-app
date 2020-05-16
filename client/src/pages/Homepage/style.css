@@ -41,3 +41,20 @@
   color: #65676b;
   padding: 0.1em;
 }
+
+.load-posts {
+  padding: 0.5em;
+  background: white;
+  text-align: center;
+  color: #4268b4;
+  margin-bottom: 1em;
+}
+
+.load-posts p {
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.load-posts p:hover {
+  text-decoration: underline;
+}

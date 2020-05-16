@@ -8,6 +8,7 @@ import {
   faHeart as liked
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as like, faComment, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import Comments from '../Comment'
 
 import { Card, CardBody, Icon } from '../../assets/css/styled-css'
 import './style.css'
@@ -43,10 +44,13 @@ const PreviewContainer = ({ image, left, right, single }) => {
 export default ({ postId }) => {
   /**
    * showIndex: Index of the image to be shown in the post
+   * showComment: To show the comment container
    */
   const [showIndex, setShowIndex] = useState(0)
+  const [showComment, setShowComment] = useState(false)
   // Post context
   const { posts, setPost } = useContext(PostContext)
+  // Notification context
   const { setNotification } = useContext(NotificationContext)
 
   // Preview container left
@@ -160,10 +164,10 @@ export default ({ postId }) => {
             )}{' '}
             {posts.posts.contents[postId].likes}
           </p>
-          <p>
+          <p onClick={() => setShowComment(!showComment)}>
             <Icon color='black' icon={faComment} /> {posts.posts.contents[postId].comments}
           </p>
-          {posts.posts.contents[postId].userId === 1 ? ( // Check loggedUser
+          {posts.posts.contents[postId].author === 1 ? ( // Check loggedUser
             <p>
               <Icon color='red' icon={faTrashAlt} />
             </p>
@@ -171,6 +175,7 @@ export default ({ postId }) => {
             ''
           )}
         </div>
+        {showComment ? <Comments postId={postId} /> : ''}
       </CardBody>
     </Card>
   )
