@@ -1,5 +1,5 @@
 const pool = require('../db/')
-const ImageUpload = require('../middlewares/imageUpload')
+const { imageUpload, deleteImage } = require('../Services/Image')
 const { promisify } = require('util')
 const fs = require('fs')
 
@@ -10,15 +10,16 @@ const fs = require('fs')
  * @return file URL's | error
  */
 const uploadImages = async (req, res) => {
-  const uploader = promisify(ImageUpload.array('images', 10))
+  const uploader = promisify(imageUpload().array('images', 10))
   try {
     await uploader(req, res)
-    if (!req.files.length) return res.status(400).json({ message: 'Please select files to upload' })
-    const files = req.files.map(
-      (file) => `http://localhost:${process.env.APP_PORT}/picter/api/image/${file.filename}`
-    )
+    if (!req.files.length) {
+      return res.status(400).json({ message: 'Please select files to upload' })
+    }
+    const files = req.files.map((file) => file.location)
     return res.status(200).json({ message: 'Uploaded files', images: files })
   } catch (err) {
+    console.log(err)
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(500).json({ message: 'Image size cannot be more than 5MB.' })
     }
@@ -79,17 +80,10 @@ const createNewPost = async (req, res) => {
  * @param res
  * @returns success msg | error
  */
-const deleteImage = async (req, res) => {
-  const removeFile = promisify(fs.unlink)
-  try {
-    await removeFile(`uploads/${req.params.image}`)
-    res.status(200).json({ message: 'File removed!' })
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return res.status(500).json({ message: 'File doesnot exist. Failed to delete.' })
-    }
-    return res.status(500).json({ message: 'There was an error. Failed to delete.' })
-  }
+const deleteImages = async (req, res) => {
+  const result = await deleteImage(req.params.image)
+  if (result) return res.status(200).json({ message: 'File removed!' })
+  return res.status(500).json({ message: 'There was an error. Failed to delete.' })
 }
 
 /**
@@ -305,7 +299,7 @@ const getComment = async (req, res) => {
 module.exports = {
   createNewPost,
   uploadImages,
-  deleteImage,
+  deleteImages,
   getUserPosts,
   likePost,
   unlikePost,
