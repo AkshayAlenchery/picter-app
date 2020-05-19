@@ -43,3 +43,11 @@ export const Icon = styled(FontAwesomeIcon)`
   margin: 0;
   cursor: pointer;
 `
+export const P = styled.p`
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1em;
+  margin-left: 0.2em;
+`

@@ -3,7 +3,7 @@ import Axios from 'axios'
 import { v4 as uuid } from 'uuid'
 
 import { Card, CardHeader, CardTitle, CardBody, Icon, Btn } from '../../assets/css/styled-css'
-import { Caption, PreviewCont } from './style'
+import { Caption, PreviewCont, P } from './style'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
 import { BASE_URL } from '../../config'
 import PreviewImage from './preview-image'
@@ -25,6 +25,7 @@ export default (props) => {
     files: []
   })
   const [upldStatus, setUpldStatus] = useState(false) // True - Completed | False - Uploading
+  const [uploading, setUploading] = useState(false)
   const { setNotification } = useContext(NotificationContext)
   const { setPost } = useContext(PostContext)
 
@@ -60,6 +61,7 @@ export default (props) => {
         }
       })
     } else {
+      setUploading(true)
       setFileCount(fileCount - flLeng)
       const formData = new FormData()
       for (const image of files) formData.append('images', image)
@@ -73,6 +75,7 @@ export default (props) => {
           data: formData,
           onUploadProgress: (event) => console.log(Math.round((event.loaded / event.total) * 100))
         })
+        setUploading(false)
         setUpldFiles({ files: [...result.data.images, ...upldFiles.files] })
         setNotification({
           action: ADD_NOTI,
@@ -84,6 +87,7 @@ export default (props) => {
           }
         })
       } catch (err) {
+        setUploading(false)
         setNotification({
           action: ADD_NOTI,
           data: {
@@ -201,6 +205,7 @@ export default (props) => {
             onChange={(event) => setCaption(event.target.value)}
             onKeyDown={changeHeight}
           />
+          {uploading ? <P>Uploading files ...</P> : ''}
           <PreviewCont>
             {upldFiles.files.map((image, index) => (
               <PreviewImage key={index} image={image} index={index} removePic={removePic} />
