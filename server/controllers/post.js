@@ -1,5 +1,5 @@
 const pool = require('../db/')
-const { imageUpload, deleteImage } = require('../Services/Image')
+const { imageUpload, deleteImage } = require('../services/Image')
 const { promisify } = require('util')
 const fs = require('fs')
 

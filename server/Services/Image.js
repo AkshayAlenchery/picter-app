@@ -4,7 +4,6 @@ const path = require('path')
 const AWS = require('aws-sdk')
 const MulterS3 = require('multer-s3')
 const dotenv = require('dotenv')
-const { promisify } = require('util')
 
 dotenv.config()
 
