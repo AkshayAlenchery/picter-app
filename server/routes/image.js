@@ -1,5 +1,5 @@
 const Router = require('express').Router()
-const { deleteImages, uploadImages } = require('../controllers/post')
+const { deleteImages, uploadImages } = require('../controllers/image')
 
 // Remove uploaded images
 Router.delete('/:image', deleteImages)
