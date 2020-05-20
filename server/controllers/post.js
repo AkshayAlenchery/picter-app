@@ -293,7 +293,33 @@ const getComment = async (req, res) => {
     })
     resp.commentIds.sort((a, b) => a - b)
     return res.status(200).json({ comments: resp })
-  } catch (err) {}
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while getting comment. PLease try again later' })
+  }
+}
+
+/**
+ * Function to delete post
+ * @param req
+ * @param res
+ * @return success message | error
+ */
+const deletePost = async (req, res) => {
+  const { postId } = req.params
+  const loggedUserId = 1
+  try {
+    const resp = await pool.query('DELETE FROM posts WHERE post_id = $1 AND posted_by = $2', [
+      postId,
+      loggedUserId
+    ])
+    return res.status(200).json({ message: 'Post deleted successfully' })
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while deleting the post. PLease try again later' })
+  }
 }
 
 module.exports = {
@@ -305,5 +331,6 @@ module.exports = {
   unlikePost,
   comment,
   deleteComment,
-  getComment
+  getComment,
+  deletePost
 }

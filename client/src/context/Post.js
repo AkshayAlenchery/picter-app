@@ -6,8 +6,10 @@ import {
   UNLIKE_POST,
   ADD_COMMENT,
   SET_COMMENTS,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  DELETE_POST
 } from './actionTypes'
+import { deleteKey } from '../helpers/context'
 
 const initialState = {
   posts: {
@@ -124,16 +126,21 @@ const reducer = (state, payload) => {
           }
         },
         users: { ...state.users },
-        comments: deleteComment(payload.data.commentId, state.comments)
+        comments: deleteKey([payload.data.commentId], state.comments)
+      }
+
+    case DELETE_POST:
+      return {
+        posts: {
+          contents: deleteKey([payload.data.postId], state.posts.contents),
+          ids: state.posts.ids.filter((id) => id !== payload.data.postId)
+        },
+        users: { ...state.users },
+        comments: deleteKey(state.posts.contents[payload.data.postId].commentIds, state.comments)
       }
     default:
       return state
   }
-}
-
-const deleteComment = (commentId, { ...comments }) => {
-  delete comments[commentId]
-  return comments
 }
 
 // Context for posts

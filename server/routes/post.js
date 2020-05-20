@@ -6,7 +6,8 @@ const {
   unlikePost,
   comment,
   deleteComment,
-  getComment
+  getComment,
+  deletePost
 } = require('../controllers/post')
 
 // Create a new post
@@ -26,6 +27,9 @@ Router.delete('/comment', deleteComment)
 
 // Get Comments
 Router.post('/getcomment', getComment)
+
+// Delete post
+Router.delete('/:postId', deletePost)
 
 // Get all posts of a user
 Router.post('/:userId', getUserPosts)

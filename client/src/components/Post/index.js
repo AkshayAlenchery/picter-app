@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as like, faComment, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import Comments from '../Comment'
+import { Link } from 'react-router-dom'
 
 import { Card, CardBody, Icon } from '../../assets/css/styled-css'
 import './style.css'
@@ -17,7 +18,7 @@ import { BASE_URL } from '../../config'
 
 import { Context as PostContext } from '../../context/Post'
 import { Context as NotificationContext } from '../../context/Notification'
-import { ADD_NOTI, LIKE_POST, UNLIKE_POST } from '../../context/actionTypes'
+import { ADD_NOTI, LIKE_POST, UNLIKE_POST, DELETE_POST } from '../../context/actionTypes'
 
 const PreviewContainer = ({ image, left, right, single }) => {
   return (
@@ -48,6 +49,7 @@ export default ({ postId }) => {
    */
   const [showIndex, setShowIndex] = useState(0)
   const [showComment, setShowComment] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   // Post context
   const { posts, setPost } = useContext(PostContext)
   // Notification context
@@ -130,8 +132,46 @@ export default ({ postId }) => {
     }
   }
 
+  const deleteImages = async (images) => {
+    for (const image of images) {
+      const key = image.split('/').slice(-1)[0]
+      try {
+        await Axios.delete(`${BASE_URL}/image/${key}`)
+      } catch (err) {
+        return false
+      }
+    }
+    return true
+  }
+
+  // Delete post
+  const deletePost = async () => {
+    try {
+      setDeleting(true)
+      const resp = await deleteImages(posts.posts.contents[postId].images)
+      if (!resp) throw new Error('Failed to delete images')
+      await Axios.delete(`${BASE_URL}/post/${postId}`)
+      setPost({
+        action: DELETE_POST,
+        data: {
+          postId: postId
+        }
+      })
+      console.log('hello')
+    } catch (err) {
+      setNotification({
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: 'Could not delete post. Try again later',
+          type: 'error',
+          color: 'red'
+        }
+      })
+    }
+  }
   return (
-    <Card bottom='0.5em'>
+    <Card bottom='0.5em' animate={deleting ? true : false}>
       <CardBody>
         <div className='post-header'>
           <div className='profile-pic'>
@@ -141,10 +181,10 @@ export default ({ postId }) => {
             />
           </div>
           <div className='user-details'>
-            <a href='#'>
+            <Link to={posts.users[posts.posts.contents[postId].author].username}>
               {posts.users[posts.posts.contents[postId].author].firstname}{' '}
               {posts.users[posts.posts.contents[postId].author].lastname}
-            </a>
+            </Link>
             <p>{moment(new Date(Number(posts.posts.contents[postId].timestamp))).fromNow()}</p>
           </div>
         </div>
@@ -169,7 +209,7 @@ export default ({ postId }) => {
           </p>
           {posts.posts.contents[postId].author === 1 ? ( // Check loggedUser
             <p>
-              <Icon color='red' icon={faTrashAlt} />
+              <Icon onClick={deletePost} color='red' icon={faTrashAlt} />
             </p>
           ) : (
             ''

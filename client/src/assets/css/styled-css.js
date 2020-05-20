@@ -1,15 +1,24 @@
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 /**
  * Card component styles
  */
+const changeColor = keyframes`
+  from {background-color: white;}
+  to {background-color: #F8DFDA;}
+`
 export const Card = styled.section`
   background: #fff;
   border: 1px solid #dddfe2;
   border-radius: 3px;
   margin: 0;
   margin-bottom: ${(props) => props.bottom};
+  ${(props) =>
+    props.animate &&
+    css`
+      animation: ${changeColor} 1s infinite alternate;
+    `};
   ${(props) =>
     props.shadow &&
     css`
