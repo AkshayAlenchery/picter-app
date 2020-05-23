@@ -4,7 +4,8 @@ const {
   unFollowUser,
   getFollowers,
   getFollowing,
-  updateProfile
+  updateProfile,
+  searchUser
 } = require('../controllers/user')
 const Router = require('express').Router()
 
@@ -22,6 +23,9 @@ Router.post('/following/:userId', getFollowing)
 
 // Update details
 Router.post('/update', updateProfile)
+
+// Search user
+Router.get('/search/:name/:current', searchUser)
 
 // Get user details
 Router.get('/:username', getUserDetails)

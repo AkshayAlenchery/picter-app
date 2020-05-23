@@ -10,9 +10,12 @@ export default ({ user }) => {
       <div className='user-img'>
         <img src={user.avatar || Avatar} alt={user.username} />
       </div>
-      <Link to={`/${user.username}`}>
-        {user.firstname} {user.lastname}
-      </Link>
+      <div className='user-info'>
+        <Link to={`/${user.username}`}>
+          {user.firstname} {user.lastname}
+        </Link>
+        <p className='bio'>{user.bio}</p>
+      </div>
     </div>
   )
 }

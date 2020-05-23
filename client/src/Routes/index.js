@@ -6,6 +6,7 @@ import { Provider as ProfileProvider } from '../context/Profile'
 
 import HomePage from '../pages/Homepage'
 import ProfilePage from '../pages/Profile'
+import SearchPage from '../pages/Search'
 
 export default () => {
   return (
@@ -14,6 +15,9 @@ export default () => {
         <PostProvider>
           <HomePage />
         </PostProvider>
+      </Route>
+      <Route exact path='/search'>
+        <SearchPage />
       </Route>
       <Route exact path='/404'>
         <h1>Page not found</h1>

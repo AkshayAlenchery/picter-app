@@ -238,11 +238,34 @@ const updateProfile = async (req, res) => {
   }
 }
 
+/**
+ * Search user
+ * @param req
+ * @param res
+ * @return [users] | error
+ */
+const searchUser = async (req, res) => {
+  const { name, current } = req.params
+  try {
+    const result = await pool.query(
+      'SELECT user_id as id, username, first_name as firstname, last_name as lastname, profile_pic as avatar, bio FROM users WHERE first_name ILIKE $1 OR last_name ILIKE $1 AND user_id > $2 ORDER BY user_id ASC LIMIT 20',
+      [`%${name}%`, current]
+    )
+    res.status(200).json(result.rows)
+  } catch (err) {
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: 'There was an error while searching. Please try again later' })
+  }
+}
+
 module.exports = {
   getUserDetails,
   followUser,
   unFollowUser,
   getFollowers,
   getFollowing,
-  updateProfile
+  updateProfile,
+  searchUser
 }
