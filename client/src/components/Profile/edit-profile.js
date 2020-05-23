@@ -96,7 +96,6 @@ export default () => {
           color: 'green'
         }
       })
-      if (updatedData.username) window.location = `/${updatedData.username}`
       setUpdatedData({})
     } catch (err) {
       setNotification({
@@ -140,7 +139,7 @@ export default () => {
             <p onClick={removePic}>Remove pic</p>
             <input type='file' style={{ display: 'none' }} ref={profilePic} onChange={changePic} />
           </div>
-          <div className='input-row'>
+          {/* <div className='input-row'>
             <label>Username</label>
             <input
               onChange={updateDetails}
@@ -148,7 +147,7 @@ export default () => {
               name='username'
               type='text'
             />
-          </div>
+          </div> */}
           <div className='input-row'>
             <label>First Name</label>
             <input
