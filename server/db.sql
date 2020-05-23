@@ -1,3 +1,11 @@
+CREATE TABLE followers
+(
+  follower_id SERIAL PRIMARY KEY,
+  follower_user INTEGER NOT NULL,
+  following_user INTEGER NOT NULL,
+  followed_on VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE comments 
 (
   comment_id SERIAL PRIMARY KEY,
@@ -34,8 +42,6 @@ CREATE TABLE users
   last_name VARCHAR(100) NOT NULL,
   email_address VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  gender VARCHAR(6) NOT NULL,
-  city VARCHAR(100) DEFAULT '',
   bio TEXT DEFAULT '',
   profile_pic TEXT DEFAULT '',
   followers INTEGER DEFAULT 0,
