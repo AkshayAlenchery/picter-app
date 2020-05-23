@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import Axios from 'axios'
 import { v1 as genId } from 'uuid'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 import Avatar from '../../assets/images/avatar.jpg'
 import { BASE_URL } from '../../config'
@@ -37,10 +38,13 @@ const Comment = ({ commentId }) => {
       })
     } catch (err) {
       setNotification({
-        id: genId(),
-        message: 'Could not delete the comment. Please try again later',
-        type: 'error',
-        color: 'red'
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: 'Could not delete the comment. Please try again later',
+          type: 'error',
+          color: 'red'
+        }
       })
     }
   }
@@ -50,17 +54,17 @@ const Comment = ({ commentId }) => {
       <img src={posts.users[posts.comments[commentId].author].avatar || Avatar} />
       <div className='comment-contents'>
         <div className='comment-user'>
-          <a href='#'>
+          <Link to={posts.users[posts.comments[commentId].author].username}>
             {posts.users[posts.comments[commentId].author].firstname}{' '}
             {posts.users[posts.comments[commentId].author].lastname}
-          </a>
+          </Link>
         </div>
         <p className='comment-text'>{posts.comments[commentId].comment}</p>
         <div className='comment-footer'>
           <p className='comment-time'>
             {moment(new Date(Number(posts.comments[commentId].timestamp))).fromNow()}
           </p>
-          <p className='split'></p>
+          <p className='split' />
           <p className='comment-delete' onClick={deleteComment}>
             Delete
           </p>
@@ -112,10 +116,13 @@ export default ({ postId }) => {
         setComment('')
       } catch (err) {
         setNotification({
-          id: genId(),
-          message: 'Could not add the comment. Please try again later',
-          type: 'error',
-          color: 'red'
+          action: ADD_NOTI,
+          data: {
+            id: genId(),
+            message: 'Could not add the comment. Please try again later',
+            type: 'error',
+            color: 'red'
+          }
         })
       }
     }
@@ -142,10 +149,13 @@ export default ({ postId }) => {
       setCommentBal(commentBal - resp.data.comments.commentIds.length)
     } catch (err) {
       setNotification({
-        id: genId(),
-        message: 'Could not load comments. Please try again later',
-        type: 'error',
-        color: 'red'
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: 'Could not load comments. Please try again later',
+          type: 'error',
+          color: 'red'
+        }
       })
     }
   }

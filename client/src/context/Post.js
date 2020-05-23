@@ -7,7 +7,8 @@ import {
   ADD_COMMENT,
   SET_COMMENTS,
   DELETE_COMMENT,
-  DELETE_POST
+  DELETE_POST,
+  RESET
 } from './actionTypes'
 import { deleteKey } from '../helpers/context'
 
@@ -24,6 +25,8 @@ const initialState = {
 const reducer = (state, payload) => {
   console.log(payload)
   switch (payload.action) {
+    case RESET:
+      return initialState
     case ADD_POST:
       return {
         posts: {

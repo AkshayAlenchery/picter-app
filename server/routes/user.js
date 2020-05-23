@@ -3,7 +3,8 @@ const {
   followUser,
   unFollowUser,
   getFollowers,
-  getFollowing
+  getFollowing,
+  updateProfile
 } = require('../controllers/user')
 const Router = require('express').Router()
 
@@ -18,6 +19,9 @@ Router.post('/followers/:userId', getFollowers)
 
 // Get following
 Router.post('/following/:userId', getFollowing)
+
+// Update details
+Router.post('/update', updateProfile)
 
 // Get user details
 Router.get('/:username', getUserDetails)

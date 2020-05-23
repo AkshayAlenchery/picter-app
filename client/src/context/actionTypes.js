@@ -11,6 +11,12 @@ export const ADD_COMMENT = 'ADD_COMMENT'
 export const SET_COMMENTS = 'SET_COMMENTS'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
 export const DELETE_POST = 'DELETE_POST'
+export const RESET = 'RESET'
 
 // Profile action types
 export const SET_PROFILE = 'SET_PROFILE'
+export const ADD_FOLLOWER = 'ADD_FOLLOWER'
+export const REMOVE_FOLLOWER = 'REMOVE_FOLLOWER'
+export const SET_FOLLOWERS = 'SET_FOLLOWERS'
+export const SET_FOLLOWING = 'SET_FOLLOWING'
+export const UPDATE_PROFILE = 'UPDATE_PROFILE'

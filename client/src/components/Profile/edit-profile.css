@@ -1,0 +1,61 @@
+.edit-pic {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.edit-pic div {
+  width: 6em;
+  height: 6em;
+}
+
+.edit-pic img,
+.edit-pic svg {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.edit-pic p {
+  cursor: pointer;
+  margin-left: 0.5em;
+  font-size: 0.9rem;
+}
+
+.edit-pic p:hover {
+  text-decoration: underline;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5em;
+}
+
+.input-row label {
+  font-size: 0.9rem;
+  margin-bottom: 0.3em;
+}
+
+.input-row input,
+.input-row textarea {
+  padding: 0.7em;
+  border: 1px solid #dddfe2;
+  border-radius: 2px;
+  font-size: 0.9rem;
+}
+
+.save-btn button {
+  cursor: pointer;
+  padding: 0.5em 1em;
+  background: #4168b4;
+  border: 1px solid #4168b4;
+  border-radius: 3px;
+  color: white;
+}
+
+.save-btn button:hover {
+  background: #3057a5;
+  border: 1px solid #3057a5;
+}

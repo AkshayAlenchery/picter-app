@@ -1,0 +1,33 @@
+.user-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.user-row:last-child {
+  margin-bottom: 0;
+}
+
+.user-img {
+  width: 2em;
+  height: 2em;
+}
+
+.user-img img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.user-row a {
+  color: black;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-left: 0.5em;
+}
+
+.user-row a:hover {
+  text-decoration: underline;
+}

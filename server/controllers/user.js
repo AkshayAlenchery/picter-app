@@ -11,7 +11,7 @@ const getUserDetails = async (req, res) => {
     const { username } = req.params
     const loggedUserId = 1
     const userDetails = await pool.query(
-      'SELECT user_id, username, first_name, last_name, gender, city, bio, profile_pic, followers, following, registered_on, follower_id FROM users LEFT JOIN followers ON followers.follower_user = $2 AND followers.following_user = users.user_id  WHERE username = $1',
+      'SELECT user_id, username, first_name, last_name, bio, profile_pic, followers, following, registered_on, follower_id FROM users LEFT JOIN followers ON followers.follower_user = $2 AND followers.following_user = users.user_id  WHERE username = $1',
       [username, loggedUserId]
     )
     if (userDetails.rowCount === 0) return res.status(404).json({ message: 'User not found' })
@@ -26,8 +26,6 @@ const getUserDetails = async (req, res) => {
       firstname: userDetails.rows[0].first_name,
       lastname: userDetails.rows[0].last_name,
       username: username,
-      gender: userDetails.rows[0].gender,
-      city: userDetails.rows[0].city,
       bio: userDetails.rows[0].bio,
       followers: userDetails.rows[0].followers,
       following: userDetails.rows[0].following,
@@ -116,6 +114,12 @@ const unFollowUser = async (req, res) => {
   }
 }
 
+/**
+ * Get follower details
+ * @param req
+ * @param res
+ * @result {followers} || error
+ */
 const getFollowers = async (req, res) => {
   const { userId } = req.params
   const { current } = req.body
@@ -150,7 +154,14 @@ const getFollowers = async (req, res) => {
   }
 }
 
+/**
+ * Get following details
+ * @param req
+ * @param res
+ * @return {following} || error
+ */
 const getFollowing = async (req, res) => {
+  console.log('following')
   const { userId } = req.params
   const { current } = req.body
   try {
@@ -164,7 +175,7 @@ const getFollowing = async (req, res) => {
       values.push(current)
     } else query = stmt1 + stmt2
     const result = await pool.query(query, values)
-    if (!result.rowCount) return res.status(200).json({ followers: [], users: {} })
+    if (!result.rowCount) return res.status(200).json({ following: [], users: {} })
     const resp = {
       following: [],
       users: {}
@@ -184,4 +195,54 @@ const getFollowing = async (req, res) => {
   }
 }
 
-module.exports = { getUserDetails, followUser, unFollowUser, getFollowers, getFollowing }
+/**
+ * Update profile information
+ * @param req
+ * @param res
+ * @return {user} || error
+ */
+const updateProfile = async (req, res) => {
+  const updatedData = req.body
+  const loggedUserId = 1
+  const columns = {
+    username: 'username',
+    firstname: 'first_name',
+    lastname: 'last_name',
+    avatar: 'profile_pic',
+    bio: 'bio'
+  }
+  try {
+    let update = ''
+    const values = [loggedUserId]
+    Object.keys(updatedData).forEach((field, index) => {
+      if (index) update += ','
+      update += `${columns[field]} = $${index + 2}`
+      values.push(updatedData[field])
+    })
+    const query =
+      'UPDATE users SET ' +
+      update +
+      ' WHERE user_id = $1 RETURNING username, first_name, last_name, profile_pic, bio'
+    console.log(query)
+    const result = await pool.query(query, values)
+    return res.status(200).json({
+      id: loggedUserId,
+      username: result.rows[0].username,
+      firstname: result.rows[0].first_name,
+      lastname: result.rows[0].last_name,
+      avatar: result.rows[0].profile_pic,
+      bio: result.rows[0].bio
+    })
+  } catch (err) {
+    return res.status(500).json({ message: 'There was an error. Please try again later' })
+  }
+}
+
+module.exports = {
+  getUserDetails,
+  followUser,
+  unFollowUser,
+  getFollowers,
+  getFollowing,
+  updateProfile
+}

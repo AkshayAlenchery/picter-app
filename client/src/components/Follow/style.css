@@ -1,0 +1,41 @@
+.edit-user {
+  background: #f5f6f7;
+  border: 1px solid #ccd0d5;
+  color: #4b4f56;
+  border-radius: 3px;
+}
+
+.edit-user:hover {
+  background: #e9eaeb;
+}
+
+.following {
+  background: #f5f6f7;
+  border: 1px solid #ccd0d5;
+  color: #4b4f56;
+  border-radius: 3px;
+}
+
+.following:hover {
+  background: #e9eaeb;
+}
+
+.following:hover span {
+  display: none;
+}
+
+.following:hover::before {
+  content: 'Unfollow';
+}
+
+.follow {
+  background: #4168b4;
+  border: 1px solid #4168b4;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.follow:hover {
+  background: #375eac;
+  border: 1px solid #375eac;
+}
