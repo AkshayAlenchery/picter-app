@@ -1,4 +1,6 @@
 const pool = require('../db/')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 /**
  * Function to get user details
@@ -9,7 +11,7 @@ const pool = require('../db/')
 const getUserDetails = async (req, res) => {
   try {
     const { username } = req.params
-    const loggedUserId = 1
+    const loggedUserId = req.user.id
     const userDetails = await pool.query(
       'SELECT user_id, username, first_name, last_name, bio, profile_pic, followers, following, registered_on, follower_id FROM users LEFT JOIN followers ON followers.follower_user = $2 AND followers.following_user = users.user_id  WHERE username = $1',
       [username, loggedUserId]
@@ -46,7 +48,7 @@ const getUserDetails = async (req, res) => {
  * @return {result} || error
  */
 const followUser = async (req, res) => {
-  const loggedUserId = 1
+  const loggedUserId = req.user.id
   const { followedUser } = req.body
   try {
     const followUser = await pool.query(
@@ -161,7 +163,6 @@ const getFollowers = async (req, res) => {
  * @return {following} || error
  */
 const getFollowing = async (req, res) => {
-  console.log('following')
   const { userId } = req.params
   const { current } = req.body
   try {
@@ -203,7 +204,7 @@ const getFollowing = async (req, res) => {
  */
 const updateProfile = async (req, res) => {
   const updatedData = req.body
-  const loggedUserId = 1
+  const loggedUserId = req.user.id
   const columns = {
     username: 'username',
     firstname: 'first_name',
@@ -223,7 +224,6 @@ const updateProfile = async (req, res) => {
       'UPDATE users SET ' +
       update +
       ' WHERE user_id = $1 RETURNING username, first_name, last_name, profile_pic, bio'
-    console.log(query)
     const result = await pool.query(query, values)
     return res.status(200).json({
       id: loggedUserId,
@@ -253,10 +253,89 @@ const searchUser = async (req, res) => {
     )
     res.status(200).json(result.rows)
   } catch (err) {
-    console.log(err)
     return res
       .status(500)
       .json({ message: 'There was an error while searching. Please try again later' })
+  }
+}
+
+/**
+ * Register a new user
+ * @param req
+ * @param res
+ * @return success | error
+ */
+const registerUser = async (req, res) => {
+  const { firstname, lastname, username, email, password } = req.body
+  try {
+    const checkUsername = await pool.query('SELECT user_id FROM users WHERE username = $1', [
+      username
+    ])
+    if (checkUsername.rowCount > 0) {
+      return res
+        .status(409)
+        .json({ message: 'The username already exist. Please try with a different username.' })
+    }
+    const checkEmail = await pool.query('SELECT user_id FROM users WHERE email_address = $1', [
+      email
+    ])
+    if (checkEmail.rowCount > 0) {
+      return res.status(409).json({
+        message: 'The email address already exists. Please try with a different email address'
+      })
+    }
+    const hashedPassword = await bcrypt.hash(password, 10)
+    await pool.query(
+      'INSERT INTO USERS (first_name, last_name, username, email_address, password, registered_on) VALUES ($1, $2, $3, $4, $5, $6)',
+      [firstname, lastname, username, email, hashedPassword, Date.now()]
+    )
+    return res.status(200).json({ message: 'Registration successfull. Please login to continue' })
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while registering. Please try again later' })
+  }
+}
+
+/**
+ * Login user
+ * @param req
+ * @param rep
+ * @result {jwt} | error
+ */
+const loginUser = async (req, res) => {
+  const { email, password } = req.body
+  try {
+    const checkUser = await pool.query(
+      'SELECT user_id, username, password, first_name, last_name FROM users WHERE email_address = $1',
+      [email]
+    )
+    if (!checkUser.rowCount) {
+      return res.status(404).json({ message: 'User not found. Please register and try again.' })
+    }
+    const checkPass = await bcrypt.compare(password, checkUser.rows[0].password)
+    if (!checkPass) {
+      return res
+        .status(401)
+        .json({ message: 'Email / password doesnot match. Please try again later' })
+    }
+    const resp = {
+      accessToken: '',
+      user: {
+        id: checkUser.rows[0].user_id,
+        username: checkUser.rows[0].username,
+        firstname: checkUser.rows[0].first_name,
+        lastname: checkUser.rows[0].last_name
+      }
+    }
+    resp.accessToken = jwt.sign({ user: checkUser.rows[0].user_id }, process.env.JWT_PRIVATE, {
+      expiresIn: '3 days'
+    })
+    return res.status(200).json(resp)
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while logging in. Please try again later' })
   }
 }
 
@@ -267,5 +346,7 @@ module.exports = {
   getFollowers,
   getFollowing,
   updateProfile,
-  searchUser
+  searchUser,
+  registerUser,
+  loginUser
 }

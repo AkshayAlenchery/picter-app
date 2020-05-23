@@ -5,29 +5,38 @@ const {
   getFollowers,
   getFollowing,
   updateProfile,
-  searchUser
+  searchUser,
+  registerUser,
+  loginUser
 } = require('../controllers/user')
+const authUser = require('../services/Auth')
 const Router = require('express').Router()
 
 // Follow user
-Router.post('/follow', followUser)
+Router.post('/follow', authUser, followUser)
 
 // Unfollow user
-Router.delete('/unfollow/:followId', unFollowUser)
+Router.delete('/unfollow/:followId', authUser, unFollowUser)
 
 // Get followers
-Router.post('/followers/:userId', getFollowers)
+Router.post('/followers/:userId', authUser, getFollowers)
 
 // Get following
-Router.post('/following/:userId', getFollowing)
+Router.post('/following/:userId', authUser, getFollowing)
 
 // Update details
-Router.post('/update', updateProfile)
+Router.post('/update', authUser, updateProfile)
 
 // Search user
-Router.get('/search/:name/:current', searchUser)
+Router.get('/search/:name/:current', authUser, searchUser)
+
+// Register user
+Router.post('/register', registerUser)
+
+// Login user
+Router.post('/login', loginUser)
 
 // Get user details
-Router.get('/:username', getUserDetails)
+Router.get('/:username', authUser, getUserDetails)
 
 module.exports = Router

@@ -10,7 +10,7 @@ const createNewPost = async (req, res) => {
   try {
     const { caption, images } = req.body
     if (!images.length) return res.status(400).json({ message: 'Please select files to upload' })
-    const userId = 1 // Get from logged in user
+    const userId = req.user.id
     const query =
       'INSERT INTO posts (caption, image_urls, posted_by, posted_on) VALUES ($1, $2, $3, $4) RETURNING *'
     const values = [caption, images, userId, Date.now()]
@@ -48,7 +48,7 @@ const createNewPost = async (req, res) => {
  * @returns posts | error
  */
 const getUserPosts = async (req, res) => {
-  const loggedUserId = 1
+  const loggedUserId = req.user.id
   const { userId } = req.params
   const { current } = req.body
   try {
@@ -104,7 +104,7 @@ const getUserPosts = async (req, res) => {
  */
 const likePost = async (req, res) => {
   const { postId } = req.body
-  const loggedUserId = 1 // Fetch from login status
+  const loggedUserId = req.user.id
   try {
     let stmt =
       'INSERT INTO likes (post_id, user_id, liked_on) VALUES ($1, $2, $3) returning like_id'
@@ -153,7 +153,7 @@ const unlikePost = async (req, res) => {
  */
 const comment = async (req, res) => {
   const { postId, comment } = req.body
-  const loggedUserId = 1
+  const loggedUserId = req.user.id
   try {
     let stmt =
       'INSERT INTO comments (post_id, user_id, comment, commented_on) VALUES ($1, $2, $3, $4) returning *'
@@ -263,7 +263,7 @@ const getComment = async (req, res) => {
  */
 const deletePost = async (req, res) => {
   const { postId } = req.params
-  const loggedUserId = 1
+  const loggedUserId = req.user.id
   try {
     const resp = await pool.query('DELETE FROM posts WHERE post_id = $1 AND posted_by = $2', [
       postId,
