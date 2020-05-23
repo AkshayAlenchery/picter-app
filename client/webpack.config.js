@@ -12,12 +12,26 @@ module.exports = {
       { test: /\.(js)$/, use: 'babel-loader' },
       { test: /\.(css)$/, use: ['style-loader', 'css-loader'] },
       {
-        test: /\.(png|jpg|gif)$/i,
+        test: /\.(png|jpg)$/i,
         use: [
           {
             loader: 'url-loader',
             options: {
               limit: 8192
+            }
+          }
+        ]
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'react-svg-loader',
+            options: {
+              jsx: true
             }
           }
         ]
@@ -29,5 +43,8 @@ module.exports = {
     new HtmlWebpack({
       template: './public/index.html'
     })
-  ]
+  ],
+  devServer: {
+    historyApiFallback: true
+  }
 }
