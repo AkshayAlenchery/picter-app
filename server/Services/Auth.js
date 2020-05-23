@@ -6,7 +6,7 @@ const checkAuth = (req, res, next) => {
   jwt.verify(token, process.env.JWT_PRIVATE, (err, data) => {
     if (err) return res.status(500).json({ message: 'Failed to authenticate' })
     console.log(data)
-    req.user = { id: data }
+    req.user = { id: data.user }
     next()
   })
 }

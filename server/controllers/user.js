@@ -307,7 +307,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body
   try {
     const checkUser = await pool.query(
-      'SELECT user_id, username, password, first_name, last_name FROM users WHERE email_address = $1',
+      'SELECT user_id, username, password, first_name, last_name, profile_pic FROM users WHERE email_address = $1',
       [email]
     )
     if (!checkUser.rowCount) {
@@ -339,6 +339,112 @@ const loginUser = async (req, res) => {
   }
 }
 
+/**
+ * Check user
+ * @param req
+ * @param res
+ * @return {user} | error
+ */
+const checkUser = async (req, res) => {
+  try {
+    const checkUser = await pool.query(
+      'SELECT user_id as id, username, first_name as firstname, last_name as lastname, profile_pic as avatar FROM users WHERE user_id = $1',
+      [req.user.id]
+    )
+    if (!checkUser.rowCount) return res.status(404).json({ message: 'User not found' })
+    return res.status(200).json(checkUser.rows[0])
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while logging in. Please try again later' })
+  }
+}
+
+/**
+ * Change password
+ * @param req
+ * @param res
+ * @return success | error
+ */
+const changePassword = async (req, res) => {
+  const { password, newPassword } = req.body
+  const loggedUserId = req.user.id
+  try {
+    const getPassword = await pool.query('SELECT password FROM users WHERE user_id = $1', [
+      loggedUserId
+    ])
+    const checkPass = await bcrypt.compare(password, getPassword.rows[0].password)
+    if (!checkPass) {
+      return res.status(401).json({ message: 'Password doesnot match. Please try again later' })
+    }
+    const newHashedPassword = await bcrypt.hash(newPassword, 10)
+    await pool.query('UPDATE users SET password = $2 WHERE user_id = $1', [
+      loggedUserId,
+      newHashedPassword
+    ])
+    return res.status(200).json({ message: 'Password updated successfully' })
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'There was an error while logging in. Please try again later' })
+  }
+}
+
+/**
+ * Get news feed
+ * @param req
+ * @param res
+ * @return {feed} | error
+ */
+const getFeed = async (req, res) => {
+  const loggedUserId = req.user.id
+  const { current } = req.body
+  try {
+    const stmt1 =
+      'SELECT posts.*, username, first_name, last_name, profile_pic, like_id FROM posts INNER JOIN users ON posts.posted_by = users.user_id LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1 WHERE posts.posted_by IN ((SELECT following_user FROM followers WHERE follower_user = $1), $1)'
+    const stmt2 = ' ORDER BY posts.post_id desc LIMIT 5'
+    let query = null
+    const values = [loggedUserId]
+    if (current > 0) {
+      query = stmt1 + ' AND posts.post_id < $2' + stmt2
+      values.push(current)
+    } else query = stmt1 + stmt2
+    const result = await pool.query(query, values)
+    const posts = {
+      contents: {},
+      ids: []
+    }
+    const users = {}
+    result.rows.forEach((post) => {
+      posts.contents[post.post_id] = {
+        caption: post.caption,
+        images: post.image_urls,
+        timestamp: post.posted_on,
+        likes: post.like_count,
+        comments: post.comment_count,
+        commentIds: [],
+        author: post.posted_by,
+        liked: post.like_id || false
+      }
+      posts.ids.push(post.post_id)
+      if (!(post.posted_by in users)) {
+        users[post.posted_by] = {
+          username: post.username,
+          firstname: post.first_name,
+          lastname: post.last_name,
+          avatar: post.profile_pic
+        }
+      }
+    })
+    return res.status(200).json({ posts, users, comments: [] })
+  } catch (err) {
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: ' There was an error while fetching posts. Please try again later.' })
+  }
+}
+
 module.exports = {
   getUserDetails,
   followUser,
@@ -348,5 +454,8 @@ module.exports = {
   updateProfile,
   searchUser,
   registerUser,
-  loginUser
+  loginUser,
+  checkUser,
+  changePassword,
+  getFeed
 }

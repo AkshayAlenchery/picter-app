@@ -265,7 +265,7 @@ const deletePost = async (req, res) => {
   const { postId } = req.params
   const loggedUserId = req.user.id
   try {
-    const resp = await pool.query('DELETE FROM posts WHERE post_id = $1 AND posted_by = $2', [
+    await pool.query('DELETE FROM posts WHERE post_id = $1 AND posted_by = $2', [
       postId,
       loggedUserId
     ])
