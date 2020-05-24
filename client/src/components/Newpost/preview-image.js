@@ -1,4 +1,4 @@
-import React from 'React'
+import React from 'react'
 import { ImgContainer, Img, Icon } from './style'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
