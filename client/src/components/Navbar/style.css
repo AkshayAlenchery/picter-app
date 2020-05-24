@@ -38,9 +38,15 @@
   cursor: pointer;
 }
 
-.dropdown-header img {
+.dropdown-img {
   width: 2em;
   height: 2em;
+  border-radius: 3px;
+}
+
+.dropdown-img img {
+  width: auto;
+  height: 100%;
   border-radius: 3px;
 }
 

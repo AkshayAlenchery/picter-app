@@ -18,6 +18,7 @@ import { BASE_URL } from '../../config'
 
 import { Context as PostContext } from '../../context/Post'
 import { Context as NotificationContext } from '../../context/Notification'
+import { Context as AuthContext } from '../../context/Auth'
 import { ADD_NOTI, LIKE_POST, UNLIKE_POST, DELETE_POST } from '../../context/actionTypes'
 
 const PreviewContainer = ({ image, left, right, single }) => {
@@ -54,6 +55,8 @@ export default ({ postId }) => {
   const { posts, setPost } = useContext(PostContext)
   // Notification context
   const { setNotification } = useContext(NotificationContext)
+  // Auth Context
+  const { authUser } = useContext(AuthContext)
 
   // Preview container left
   const moveLeft = () => {
@@ -207,7 +210,7 @@ export default ({ postId }) => {
           <p onClick={() => setShowComment(!showComment)}>
             <Icon color='black' icon={faComment} /> {posts.posts.contents[postId].comments}
           </p>
-          {posts.posts.contents[postId].author === 1 ? ( // Check loggedUser
+          {posts.posts.contents[postId].author === authUser.user.id ? (
             <p>
               <Icon onClick={deletePost} color='red' icon={faTrashAlt} />
             </p>

@@ -15,6 +15,7 @@ import EditProfile from '../../components/Profile/edit-profile'
 import { Context as ProfileContext } from '../../context/Profile'
 import { Context as NotificationContext } from '../../context/Notification'
 import { Context as PostContext } from '../../context/Post'
+import { Context as AuthContext } from '../../context/Auth'
 import { SET_PROFILE, ADD_NOTI, SET_POSTS, RESET } from '../../context/actionTypes'
 
 export default () => {
@@ -32,9 +33,10 @@ export default () => {
   const { profile, setProfile } = useContext(ProfileContext)
   const { setNotification } = useContext(NotificationContext)
   const { posts, setPost } = useContext(PostContext)
+  const { authUser } = useContext(AuthContext)
 
   // To load user posts
-  const getPosts = async (userId) => {
+  const getPosts = async (userId, current) => {
     try {
       const result = await Axios({
         method: 'POST',
@@ -43,7 +45,7 @@ export default () => {
           'Content-Type': 'application/json'
         },
         data: {
-          current: posts.posts.ids[posts.posts.ids.length - 1] || 0
+          current: current
         }
       })
       if (!result.data.posts.ids.length) return setLoadMore(false)
@@ -73,7 +75,9 @@ export default () => {
         data: userDetails.data.user
       })
       setPost({ action: RESET, data: {} })
-      getPosts(userDetails.data.user.user.id)
+      // wait and change the state
+      setLoadMore(true)
+      getPosts(userDetails.data.user.user.id, 0)
     } catch (err) {
       setCheckUser(false)
     }
@@ -97,7 +101,11 @@ export default () => {
               {
                 <Switch>
                   <Route path={`${path}/edit`}>
-                    {profile.user.id === 1 ? <EditProfile /> : <Redirect to={`${url}`} />}
+                    {profile.user.id === authUser.user.id ? (
+                      <EditProfile />
+                    ) : (
+                      <Redirect to={`${url}`} />
+                    )}
                   </Route>
                   <Route path={`${path}/following`}>
                     <Following />
@@ -113,7 +121,12 @@ export default () => {
                     )}
                     {posts.posts.ids.length & loadMore ? (
                       <div className='load-posts'>
-                        <p onClick={() => getPosts(profile.user.id)}>Load more posts</p>
+                        <p
+                          onClick={() =>
+                            getPosts(profile.user.id, posts.posts.ids[posts.posts.ids.length - 1])
+                          }>
+                          Load more posts
+                        </p>
                       </div>
                     ) : (
                       ''

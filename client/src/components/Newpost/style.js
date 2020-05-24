@@ -7,6 +7,7 @@ export const Caption = styled.textarea`
   resize: none;
   font-size: 0.9em;
   letter-spacing: 0.02em;
+  font-family: 'Roboto', sans-serif;
 `
 
 export const PreviewCont = styled.section`

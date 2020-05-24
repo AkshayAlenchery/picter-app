@@ -11,10 +11,14 @@
   margin-bottom: 0.5em;
 }
 
-.comment img {
+.comment-img {
   width: 2em;
   height: 2em;
-  border-radius: 5px;
+}
+.comment-img img {
+  width: auto;
+  height: 100%;
+  border-radius: 3px;
 }
 
 .comment-contents {

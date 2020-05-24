@@ -7,13 +7,16 @@ import Notifications from './components/Notifications'
 import Approute from './Routes/index'
 
 import { Provider as NotifcationProvider } from './context/Notification'
+import { Provider as AuthProvider } from './context/Auth'
 
 export default (props) => {
   return (
     <NotifcationProvider>
       <Notifications />
       <Router>
-        <Approute />
+        <AuthProvider>
+          <Approute />
+        </AuthProvider>
       </Router>
     </NotifcationProvider>
   )

@@ -9,12 +9,14 @@ import { BASE_URL } from '../../config'
 import './style.css'
 
 import { Context as NotificationContext } from '../../context/Notification'
+import { Context as AuthContext } from '../../context/Auth'
 import { Context as PostContext } from '../../context/Post'
 import { ADD_NOTI, ADD_COMMENT, SET_COMMENTS, DELETE_COMMENT } from '../../context/actionTypes'
 
 const Comment = ({ commentId }) => {
   const { posts, setPost } = useContext(PostContext)
   const { setNotification } = useContext(NotificationContext)
+  const { authUser } = useContext(AuthContext)
 
   // Delete comment
   const deleteComment = async () => {
@@ -51,7 +53,9 @@ const Comment = ({ commentId }) => {
 
   return (
     <div className='comment'>
-      <img src={posts.users[posts.comments[commentId].author].avatar || Avatar} />
+      <div className='comment-img'>
+        <img src={posts.users[posts.comments[commentId].author].avatar || Avatar} />
+      </div>
       <div className='comment-contents'>
         <div className='comment-user'>
           <Link to={posts.users[posts.comments[commentId].author].username}>
@@ -65,9 +69,13 @@ const Comment = ({ commentId }) => {
             {moment(new Date(Number(posts.comments[commentId].timestamp))).fromNow()}
           </p>
           <p className='split' />
-          <p className='comment-delete' onClick={deleteComment}>
-            Delete
-          </p>
+          {posts.comments[commentId].author === authUser.user.id ? (
+            <p className='comment-delete' onClick={deleteComment}>
+              Delete
+            </p>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>

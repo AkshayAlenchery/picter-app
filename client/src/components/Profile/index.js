@@ -5,6 +5,7 @@ import Avatar from '../../assets/images/avatar.jpg'
 import ProfileButton from '../../components/Follow'
 
 import { Context as ProfileContext } from '../../context/Profile'
+import { Context as AuthContext } from '../../context/Auth'
 import { ADD_FOLLOWER, REMOVE_FOLLOWER } from '../../context/actionTypes'
 
 import './style.css'
@@ -12,6 +13,7 @@ import './style.css'
 export default (props) => {
   const { url } = useRouteMatch()
 
+  const { authUser } = useContext(AuthContext)
   const { profile, setProfile } = useContext(ProfileContext)
 
   // Add follower
@@ -71,7 +73,7 @@ export default (props) => {
         {/* Follow button */}
         <div className='profile-actions'>
           <ProfileButton
-            loggedInUser={1}
+            loggedInUser={authUser.user.id}
             userId={profile.user.id}
             isFollowing={profile.user.isFollowing}
             follow={follow}

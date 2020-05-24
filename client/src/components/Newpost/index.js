@@ -9,10 +9,14 @@ import { BASE_URL } from '../../config'
 import PreviewImage from './preview-image'
 
 import { Context as PostContext } from '../../context/Post'
+import { Context as AuthContext } from '../../context/Auth'
 import { Context as NotificationContext } from '../../context/Notification'
 import { ADD_NOTI, ADD_POST } from '../../context/actionTypes'
 
 export default (props) => {
+  const { setNotification } = useContext(NotificationContext)
+  const { setPost } = useContext(PostContext)
+  const { authUser } = useContext(AuthContext)
   /**
    * States
    * fileCount - To maintain file count
@@ -26,8 +30,6 @@ export default (props) => {
   })
   const [upldStatus, setUpldStatus] = useState(false) // True - Completed | False - Uploading
   const [uploading, setUploading] = useState(false)
-  const { setNotification } = useContext(NotificationContext)
-  const { setPost } = useContext(PostContext)
 
   // Ref to select files
   const fileInp = useRef(null)
@@ -147,11 +149,11 @@ export default (props) => {
       })
       // Set user from logged in user
       result.data.post.users = {
-        1: {
-          username: 'akshayalenchery',
-          firstname: 'Akshay',
-          lastname: 'Alenchery',
-          avatar: ''
+        [authUser.user.id]: {
+          username: authUser.user.username,
+          avatar: authUser.user.avatar,
+          firstname: authUser.user.firstname,
+          lastname: authUser.user.lastname
         }
       }
       setPost({
@@ -170,7 +172,6 @@ export default (props) => {
           color: 'green'
         }
       })
-      console.log(result.data)
     } catch (err) {
       setNotification({
         action: ADD_NOTI,

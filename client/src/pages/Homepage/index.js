@@ -9,6 +9,7 @@ import './style.css'
 import { BASE_URL } from '../../config'
 
 import { Context as NotificationContext } from '../../context/Notification'
+import { Context as AuthContext } from '../../context/Auth'
 import { Context as PostContext } from '../../context/Post'
 import { ADD_NOTI, SET_POSTS } from '../../context/actionTypes'
 
@@ -17,6 +18,8 @@ export default (props) => {
   const { setNotification } = useContext(NotificationContext)
   // Post context
   const { posts, setPost } = useContext(PostContext)
+  // Auth user context
+  const { authUser } = useContext(AuthContext)
   // State to store id of last post
   const [currentId, setCurrentId] = useState(0)
   // State for no more post
@@ -25,11 +28,10 @@ export default (props) => {
   // Load all posts
   useEffect(() => {
     const getPosts = async () => {
-      const loggedUserId = 1
       try {
         const result = await Axios({
           method: 'POST',
-          url: `${BASE_URL}/post/${loggedUserId}`,
+          url: `${BASE_URL}/user/newsfeed`,
           headers: {
             'Content-Type': 'application/json'
           },
