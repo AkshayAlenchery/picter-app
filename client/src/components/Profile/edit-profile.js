@@ -24,6 +24,7 @@ export default () => {
   // To store the updated data
   const [updatedData, setUpdatedData] = useState({})
   const [uploading, setUploading] = useState(false)
+  const [password, setPassword] = useState({})
 
   // Function to run the ref
   const selectFile = () => {
@@ -71,8 +72,15 @@ export default () => {
     })
   }
 
-  // Save changed details
+  // Update data
+  const updatePassword = (event) => {
+    setPassword({
+      ...password,
+      [event.target.name]: event.target.value
+    })
+  }
 
+  // Save changed details
   const saveDetails = async () => {
     try {
       const resp = await Axios({
@@ -110,6 +118,40 @@ export default () => {
     }
   }
 
+  // Save password
+  const savePassword = async () => {
+    try {
+      await Axios({
+        method: 'POST',
+        url: `${BASE_URL}/user/update/password`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: password
+      })
+      setNotification({
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: 'Password changed successfully',
+          type: 'success',
+          color: 'green'
+        }
+      })
+      setPassword({})
+    } catch (err) {
+      setNotification({
+        action: ADD_NOTI,
+        data: {
+          id: genId(),
+          message: err.response.data.message,
+          type: 'error',
+          color: 'red'
+        }
+      })
+    }
+  }
+
   // Remove Picture
   const removePic = () => {
     setUpdatedData({ ...updatedData, avatar: '' })
@@ -117,29 +159,35 @@ export default () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Edit profile</CardTitle>
-      </CardHeader>
-      <CardBody>
-        <div className='edit-container'>
-          <div className='edit-pic'>
-            <div>
-              {uploading ? (
-                <Loader />
-              ) : (
-                <img
-                  id='avatar'
-                  src={updatedData.avatar || profile.user.avatar || Avatar}
-                  alt='name'
-                />
-              )}
+    <div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Edit profile</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <div className='edit-container'>
+            <div className='edit-pic'>
+              <div>
+                {uploading ? (
+                  <Loader />
+                ) : (
+                  <img
+                    id='avatar'
+                    src={updatedData.avatar || profile.user.avatar || Avatar}
+                    alt='name'
+                  />
+                )}
+              </div>
+              <p onClick={selectFile}>Change profile picture | </p>
+              <p onClick={removePic}>Remove pic</p>
+              <input
+                type='file'
+                style={{ display: 'none' }}
+                ref={profilePic}
+                onChange={changePic}
+              />
             </div>
-            <p onClick={selectFile}>Change profile picture | </p>
-            <p onClick={removePic}>Remove pic</p>
-            <input type='file' style={{ display: 'none' }} ref={profilePic} onChange={changePic} />
-          </div>
-          {/* <div className='input-row'>
+            {/* <div className='input-row'>
             <label>Username</label>
             <input
               onChange={updateDetails}
@@ -148,37 +196,68 @@ export default () => {
               type='text'
             />
           </div> */}
-          <div className='input-row'>
-            <label>First Name</label>
-            <input
-              onChange={updateDetails}
-              value={updatedData.firstname || profile.user.firstname}
-              name='firstname'
-              type='text'
-            />
+            <div className='input-row'>
+              <label>First Name</label>
+              <input
+                onChange={updateDetails}
+                value={updatedData.firstname || profile.user.firstname}
+                name='firstname'
+                type='text'
+              />
+            </div>
+            <div className='input-row'>
+              <label>Last Name</label>
+              <input
+                onChange={updateDetails}
+                value={updatedData.lastname || profile.user.lastname}
+                name='lastname'
+                type='text'
+              />
+            </div>
+            <div className='input-row'>
+              <label>Bio</label>
+              <textarea
+                onChange={updateDetails}
+                name='bio'
+                value={updatedData.bio || profile.user.bio}
+              />
+            </div>
+            <div className='save-btn'>
+              <button onClick={saveDetails}>Save</button>
+            </div>
           </div>
-          <div className='input-row'>
-            <label>Last Name</label>
-            <input
-              onChange={updateDetails}
-              value={updatedData.lastname || profile.user.lastname}
-              name='lastname'
-              type='text'
-            />
+        </CardBody>
+      </Card>
+      <Card style={{ marginTop: '0.5em' }}>
+        <CardHeader>
+          <CardTitle>Change password</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <div className='edit-container'>
+            <div className='input-row'>
+              <label>Password</label>
+              <input
+                onChange={updatePassword}
+                value={password.password || ''}
+                name='password'
+                type='password'
+              />
+            </div>
+            <div className='input-row'>
+              <label>New password</label>
+              <input
+                onChange={updatePassword}
+                value={password.newPassword || ''}
+                name='newPassword'
+                type='password'
+              />
+            </div>
+            <div className='save-btn'>
+              <button onClick={savePassword}>Change password</button>
+            </div>
           </div>
-          <div className='input-row'>
-            <label>Bio</label>
-            <textarea
-              onChange={updateDetails}
-              name='bio'
-              value={updatedData.bio || profile.user.bio}
-            />
-          </div>
-          <div className='save-btn'>
-            <button onClick={saveDetails}>Save</button>
-          </div>
-        </div>
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+    </div>
   )
 }

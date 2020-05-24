@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar'
 import User from '../../components/Search'
 import './style.css'
 import { BASE_URL } from '../../config'
+import ProfileNav from '../../components/Sidebar/profile'
 
 import { Context as NotificationContext } from '../../context/Notification'
 import { ADD_NOTI } from '../../context/actionTypes'
@@ -55,7 +56,7 @@ export default (props) => {
             </div>
           </div>
           <div className='sidebar'>
-            <h1>sidebar</h1>
+            <ProfileNav />
           </div>
         </div>
       </div>

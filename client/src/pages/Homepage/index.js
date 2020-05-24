@@ -7,6 +7,7 @@ import Newpost from '../../components/Newpost'
 import Post from '../../components/Post'
 import './style.css'
 import { BASE_URL } from '../../config'
+import ProfileSidebar from '../../components/Sidebar/profile'
 
 import { Context as NotificationContext } from '../../context/Notification'
 import { Context as AuthContext } from '../../context/Auth'
@@ -80,8 +81,8 @@ export default (props) => {
               ''
             )}
           </div>
-          <div className='sidebar'>
-            <h1>sidebar</h1>
+          <div className='sidebar-profile'>
+            <ProfileSidebar />
           </div>
         </div>
       </div>

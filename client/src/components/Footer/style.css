@@ -1,0 +1,15 @@
+.footer-text {
+  text-emphasis: center;
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 2em;
+}
+
+.footer-text a {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}

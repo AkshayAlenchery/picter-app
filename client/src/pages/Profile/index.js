@@ -11,6 +11,7 @@ import Post from '../../components/Post'
 import Followers from '../Followers'
 import Following from '../Following'
 import EditProfile from '../../components/Profile/edit-profile'
+import SidebarNav from '../../components/Sidebar/navbar'
 
 import { Context as ProfileContext } from '../../context/Profile'
 import { Context as NotificationContext } from '../../context/Notification'
@@ -135,7 +136,9 @@ export default () => {
                 </Switch>
               }
             </div>
-            <div className='profile-info'></div>
+            <div className='profile-nav'>
+              <SidebarNav />
+            </div>
           </div>
         </div>
       </div>

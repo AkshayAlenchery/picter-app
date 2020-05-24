@@ -102,34 +102,5 @@ export default () => {
       </Switch>
     )
   }
-  return <h1>Validating login status ....</h1>
+  return ''
 }
-
-// return (
-//   <Switch>
-//     <Route exact path='/register'>
-//       <RegisterPage />
-//     </Route>
-//     <Route exact path='/'>
-//       <LoginPage />
-//     </Route>
-//     <Route exact path='/home'>
-//       <PostProvider>
-//         <HomePage />
-//       </PostProvider>
-//     </Route>
-//     <Route exact path='/search'>
-//       <SearchPage />
-//     </Route>
-//     <Route exact path='/404'>
-//       <h1>Page not found</h1>
-//     </Route>
-// <Route path='/:username'>
-//   <ProfileProvider>
-//     <PostProvider>
-//       <ProfilePage />
-//     </PostProvider>
-//   </ProfileProvider>
-// </Route>
-//   </Switch>
-// )

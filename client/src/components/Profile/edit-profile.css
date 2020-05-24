@@ -53,6 +53,7 @@
   border: 1px solid #4168b4;
   border-radius: 3px;
   color: white;
+  font-size: 0.8rem;
 }
 
 .save-btn button:hover {

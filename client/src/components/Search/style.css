@@ -20,11 +20,11 @@
   border-radius: 3px;
 }
 
-.user-info {
+.user-det {
   margin-left: 0.5em;
 }
 
-.user-info a {
+.user-det a {
   color: black;
   text-decoration: none;
   font-size: 0.9rem;
@@ -32,11 +32,11 @@
   margin: 0;
 }
 
-.user-info a:hover {
+.user-det a:hover {
   text-decoration: underline;
 }
 
-.user-info p {
+.user-det p {
   font-size: 0.8rem;
   margin-top: 0.3em;
 }

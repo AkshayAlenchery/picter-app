@@ -10,7 +10,7 @@ export default ({ user }) => {
       <div className='user-img'>
         <img src={user.avatar || Avatar} alt={user.username} />
       </div>
-      <div className='user-info'>
+      <div className='user-det'>
         <Link to={`/${user.username}`}>
           {user.firstname} {user.lastname}
         </Link>
