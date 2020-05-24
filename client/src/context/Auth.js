@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react'
 
-import { LOGIN_USER, LOGOUT_USER } from '../context/actionTypes'
+import { LOGIN_USER, LOGOUT_USER, UPDATE_AUTH_USER } from '../context/actionTypes'
 
 const reducer = (state, payload) => {
   console.log(payload)
@@ -9,6 +9,8 @@ const reducer = (state, payload) => {
       return Object.assign({}, state, { isAuth: true, user: payload.data })
     case LOGOUT_USER:
       return Object.assign({}, state, { isAuth: false, user: null })
+    case UPDATE_AUTH_USER:
+      return Object.assign({}, state, { user: payload.data })
     default:
       return state
   }

@@ -1,0 +1,21 @@
+{
+  "name": "picter-app",
+  "version": "1.0.0",
+  "description": "### A photo sharing application made using MERN stack",
+  "main": "index.js",
+  "scripts": {
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "start": "npm run start --prefix server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkshayAlenchery/picter-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AkshayAlenchery/picter-app/issues"
+  },
+  "homepage": "https://github.com/AkshayAlenchery/picter-app#readme"
+}

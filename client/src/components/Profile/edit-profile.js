@@ -9,7 +9,8 @@ import { BASE_URL } from '../../config'
 
 import { Context as NotificationContext } from '../../context/Notification'
 import { Context as ProfileContext } from '../../context/Profile'
-import { ADD_NOTI, UPDATE_PROFILE } from '../../context/actionTypes'
+import { Context as AuthContext } from '../../context/Auth'
+import { ADD_NOTI, UPDATE_PROFILE, UPDATE_AUTH_USER } from '../../context/actionTypes'
 
 import './edit-profile.css'
 
@@ -20,6 +21,7 @@ export default () => {
   // Context
   const { setNotification } = useContext(NotificationContext)
   const { profile, setProfile } = useContext(ProfileContext)
+  const { setAuthUser } = useContext(AuthContext)
 
   // To store the updated data
   const [profileInfo, setProfileInfo] = useState({ ...profile.user })
@@ -115,6 +117,16 @@ export default () => {
       setProfile({
         action: UPDATE_PROFILE,
         data: resp.data
+      })
+      setAuthUser({
+        action: UPDATE_AUTH_USER,
+        data: {
+          id: resp.data.id,
+          username: resp.data.username,
+          firstname: resp.data.firstname,
+          lastname: resp.data.lastname,
+          avatar: resp.data.avatar
+        }
       })
       setNotification({
         action: ADD_NOTI,

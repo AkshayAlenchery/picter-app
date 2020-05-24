@@ -45,6 +45,12 @@ module.exports = {
     })
   ],
   devServer: {
+    proxy: {
+      '/picter/api': {
+        target: 'http://localhost:5500',
+        changeOrigin: true
+      }
+    },
     historyApiFallback: true
   }
 }
