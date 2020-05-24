@@ -67,7 +67,7 @@ export default (props) => {
           <div className='contents'>
             <Newpost />
             {!posts.posts.ids.length ? (
-              <p class='muted-text'>No posts to show</p>
+              <p className='muted-text'>No posts to show</p>
             ) : (
               posts.posts.ids.map((id) => <Post key={id} postId={id} />)
             )}
