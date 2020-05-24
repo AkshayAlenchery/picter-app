@@ -354,9 +354,7 @@ const checkUser = async (req, res) => {
     if (!checkUser.rowCount) return res.status(404).json({ message: 'User not found' })
     return res.status(200).json(checkUser.rows[0])
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: 'There was an error while logging in. Please try again later' })
+    return res.status(500).json({ message: 'There was an error. Please try again later' })
   }
 }
 
@@ -384,9 +382,7 @@ const changePassword = async (req, res) => {
     ])
     return res.status(200).json({ message: 'Password updated successfully' })
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: 'There was an error while logging in. Please try again later' })
+    return res.status(500).json({ message: 'There was an error. Please try again later' })
   }
 }
 
