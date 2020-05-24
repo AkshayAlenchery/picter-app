@@ -20,3 +20,7 @@ export const REMOVE_FOLLOWER = 'REMOVE_FOLLOWER'
 export const SET_FOLLOWERS = 'SET_FOLLOWERS'
 export const SET_FOLLOWING = 'SET_FOLLOWING'
 export const UPDATE_PROFILE = 'UPDATE_PROFILE'
+
+// Authentication
+export const LOGIN_USER = 'LOGIN_USER'
+export const LOGOUT_USER = 'LOGOUT_USER'
