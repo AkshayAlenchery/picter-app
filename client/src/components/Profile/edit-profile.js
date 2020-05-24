@@ -22,6 +22,7 @@ export default () => {
   const { profile, setProfile } = useContext(ProfileContext)
 
   // To store the updated data
+  const [profileInfo, setProfileInfo] = useState({ ...profile.user })
   const [updatedData, setUpdatedData] = useState({})
   const [uploading, setUploading] = useState(false)
   const [password, setPassword] = useState({})
@@ -50,6 +51,10 @@ export default () => {
         ...updatedData,
         avatar: resp.data.images[0]
       })
+      setProfileInfo({
+        ...profileInfo,
+        avatar: resp.data.images[0]
+      })
       setUploading(false)
     } catch (err) {
       setNotification({
@@ -70,6 +75,10 @@ export default () => {
       ...updatedData,
       [event.target.name]: event.target.value
     })
+    setProfileInfo({
+      ...profileInfo,
+      [event.target.name]: event.target.value
+    })
   }
 
   // Update data
@@ -83,6 +92,18 @@ export default () => {
   // Save changed details
   const saveDetails = async () => {
     try {
+      if (!profileInfo.firstname || !profileInfo.lastname) {
+        setNotification({
+          action: ADD_NOTI,
+          data: {
+            id: genId(),
+            message: 'First name or Last name cant be empty',
+            type: 'error',
+            color: 'red'
+          }
+        })
+        return null
+      }
       const resp = await Axios({
         method: 'POST',
         url: `${BASE_URL}/user/update`,
@@ -155,6 +176,7 @@ export default () => {
   // Remove Picture
   const removePic = () => {
     setUpdatedData({ ...updatedData, avatar: '' })
+    setProfileInfo({ ...profileInfo, avatar: '' })
     document.getElementById('avatar').src = Avatar
   }
 
@@ -171,11 +193,7 @@ export default () => {
                 {uploading ? (
                   <Loader />
                 ) : (
-                  <img
-                    id='avatar'
-                    src={updatedData.avatar || profile.user.avatar || Avatar}
-                    alt='name'
-                  />
+                  <img id='avatar' src={profileInfo.avatar || Avatar} alt='name' />
                 )}
               </div>
               <p onClick={selectFile}>Change profile picture | </p>
@@ -200,27 +218,25 @@ export default () => {
               <label>First Name</label>
               <input
                 onChange={updateDetails}
-                value={updatedData.firstname || profile.user.firstname}
+                value={profileInfo.firstname}
                 name='firstname'
                 type='text'
+                required
               />
             </div>
             <div className='input-row'>
               <label>Last Name</label>
               <input
                 onChange={updateDetails}
-                value={updatedData.lastname || profile.user.lastname}
+                value={profileInfo.lastname}
                 name='lastname'
                 type='text'
+                required
               />
             </div>
             <div className='input-row'>
               <label>Bio</label>
-              <textarea
-                onChange={updateDetails}
-                name='bio'
-                value={updatedData.bio || profile.user.bio}
-              />
+              <textarea onChange={updateDetails} name='bio' value={profileInfo.bio} />
             </div>
             <div className='save-btn'>
               <button onClick={saveDetails}>Save</button>
@@ -241,15 +257,17 @@ export default () => {
                 value={password.password || ''}
                 name='password'
                 type='password'
+                required
               />
             </div>
             <div className='input-row'>
-              <label>New password</label>
+              <label>New Password</label>
               <input
                 onChange={updatePassword}
                 value={password.newPassword || ''}
                 name='newPassword'
                 type='password'
+                required
               />
             </div>
             <div className='save-btn'>
