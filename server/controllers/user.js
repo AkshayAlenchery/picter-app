@@ -397,15 +397,24 @@ const getFeed = async (req, res) => {
   const { current } = req.body
   try {
     const stmt1 =
-      'SELECT posts.*, username, first_name, last_name, profile_pic, like_id FROM posts INNER JOIN users ON posts.posted_by = users.user_id LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1 WHERE posts.posted_by IN ((SELECT following_user FROM followers WHERE follower_user = $1), $1)'
-    const stmt2 = ' ORDER BY posts.post_id desc LIMIT 5'
-    let query = null
+      '(SELECT posts.*, username, first_name, last_name, profile_pic, like_id FROM posts INNER JOIN users ON posts.posted_by = users.user_id LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1 WHERE posts.posted_by IN (SELECT following_user FROM followers WHERE follower_user = $1)'
+    const stmt2 = ' LIMIT 5)'
+    let query1 = null
+    let query2 = null
+    const stmt3 =
+      '(SELECT posts.*, username, first_name, last_name, profile_pic, like_id FROM posts INNER JOIN users ON posts.posted_by = users.user_id LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1 WHERE posts.posted_by = $1'
     const values = [loggedUserId]
     if (current > 0) {
-      query = stmt1 + ' AND posts.post_id < $2' + stmt2
+      query1 = stmt1 + ' AND posts.post_id < $2' + stmt2
+      query2 = stmt3 + ' AND posts.post_id < $2' + stmt2
       values.push(current)
-    } else query = stmt1 + stmt2
+    } else {
+      query1 = stmt1 + stmt2
+      query2 = stmt3 + stmt2
+    }
+    const query = 'SELECT * FROM (' + query1 + ' UNION ' + query2 + ') x ORDER BY post_id DESC'
     const result = await pool.query(query, values)
+    console.log(result.rows)
     const posts = {
       contents: {},
       ids: []
@@ -434,7 +443,6 @@ const getFeed = async (req, res) => {
     })
     return res.status(200).json({ posts, users, comments: [] })
   } catch (err) {
-    console.log(err)
     return res
       .status(500)
       .json({ message: ' There was an error while fetching posts. Please try again later.' })

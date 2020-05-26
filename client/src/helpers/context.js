@@ -10,3 +10,9 @@ export const deleteKey = (ids, { ...data }) => {
   })
   return data
 }
+
+export const mergeArrays = (arr1, arr2) => {
+  const newArr = [...arr1, ...arr2]
+  console.log('ak', newArr)
+  return Array.from(new Set(newArr))
+}
