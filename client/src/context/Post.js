@@ -10,7 +10,7 @@ import {
   DELETE_POST,
   RESET
 } from './actionTypes'
-import { deleteKey, mergeArrays } from '../helpers/context'
+import { deleteKey } from '../helpers/context'
 
 const initialState = {
   posts: {
@@ -49,7 +49,7 @@ const reducer = (state, payload) => {
             ...state.posts.contents,
             ...payload.data.posts.contents
           },
-          ids: mergeArrays(state.posts.ids, payload.data.posts.ids)
+          ids: [...state.posts.ids, ...payload.data.posts.ids]
         },
         users: {
           ...state.users,

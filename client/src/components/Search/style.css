@@ -11,11 +11,13 @@
 .user-img {
   width: 3.5em;
   height: 3.5em;
+  display: flex;
+  justify-content: center;
 }
 
 .user-img img {
   height: 100%;
-  width: 100%;
+  width: auto;
   object-fit: cover;
   border-radius: 3px;
 }
