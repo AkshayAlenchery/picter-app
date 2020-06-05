@@ -1,17 +1,20 @@
 import React, { useState, useContext } from 'react'
 import { v1 as genId } from 'uuid'
 import Axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import Navbar from '../../components/Navbar'
 import { BASE_URL } from '../../config'
 import './style.css'
 
 import { Context as NotificationContext } from '../../context/Notification'
-import { ADD_NOTI } from '../../context/actionTypes'
+import { Context as AuthContext } from '../../context/Auth'
+import { ADD_NOTI, LOGIN_USER } from '../../context/actionTypes'
 
 export default () => {
   const { setNotification } = useContext(NotificationContext)
+  const { setAuthUser } = useContext(AuthContext)
+  const [login, setLogin] = useState(false)
 
   const [user, setUser] = useState({
     firstname: '',
@@ -25,11 +28,18 @@ export default () => {
     setUser({ ...user, [event.target.name]: event.target.value })
   }
 
+  const setCookie = (name, value) => {
+    const d = new Date()
+    d.setTime(d.getTime() + 3 * 24 * 60 * 60 * 1000)
+    const expires = 'expires=' + d.toUTCString()
+    document.cookie = name + '=' + value + ';' + expires + ';path=/'
+  }
+
   // Register user
   const registerUser = async (event) => {
     event.preventDefault()
     try {
-      await Axios({
+      const resp = await Axios({
         method: 'POST',
         url: `${BASE_URL}/auth/register`,
         headers: {
@@ -44,15 +54,13 @@ export default () => {
         username: '',
         password: ''
       })
-      setNotification({
-        action: ADD_NOTI,
-        data: {
-          id: genId(),
-          message: 'Registration successful. Please login to continue',
-          type: 'success',
-          color: 'green'
-        }
+      setAuthUser({
+        action: LOGIN_USER,
+        data: resp.data.user
       })
+      setCookie('x-auth-token', resp.data.accessToken)
+      Axios.defaults.headers.common['x-auth-token'] = resp.data.accessToken
+      setLogin(true)
     } catch (err) {
       setNotification({
         action: ADD_NOTI,
@@ -66,7 +74,9 @@ export default () => {
     }
   }
 
-  return (
+  return login ? (
+    <Redirect to='/home' />
+  ) : (
     <div>
       <Navbar />
       <div className='auth-contents'>

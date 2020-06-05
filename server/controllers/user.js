@@ -285,11 +285,24 @@ const registerUser = async (req, res) => {
       })
     }
     const hashedPassword = await bcrypt.hash(password, 10)
-    await pool.query(
-      'INSERT INTO USERS (first_name, last_name, username, email_address, password, registered_on) VALUES ($1, $2, $3, $4, $5, $6)',
+    const user = await pool.query(
+      'INSERT INTO USERS (first_name, last_name, username, email_address, password, registered_on) VALUES ($1, $2, $3, $4, $5, $6) RETURNING user_id',
       [firstname, lastname, username, email, hashedPassword, Date.now()]
     )
-    return res.status(200).json({ message: 'Registration successfull. Please login to continue' })
+
+    const resp = {
+      accessToken: '',
+      user: {
+        id: user.rows[0].user_id,
+        username: username,
+        firstname: firstname,
+        lastname: lastname
+      }
+    }
+    resp.accessToken = jwt.sign({ user: user.rows[0].user_id }, process.env.JWT_PRIVATE, {
+      expiresIn: '3 days'
+    })
+    return res.status(200).json(resp)
   } catch (err) {
     return res
       .status(500)
@@ -397,7 +410,7 @@ const getFeed = async (req, res) => {
   const { current } = req.body
   try {
     const stmt1 =
-      '(SELECT posts.*, username, first_name, last_name, profile_pic, like_id FROM posts INNER JOIN users ON posts.posted_by = users.user_id LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1 WHERE posts.posted_by IN (SELECT following_user FROM followers WHERE follower_user = $1 UNION SELECT 4 as following_user)'
+      '(SELECT posts.*, username, first_name, last_name, profile_pic, like_id FROM posts INNER JOIN users ON posts.posted_by = users.user_id LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1 WHERE posts.posted_by IN (SELECT following_user FROM followers WHERE follower_user = $1 UNION SELECT $1 as following_user)'
     const stmt2 = ' ORDER BY posts.post_id DESC LIMIT 5)'
     let query
     const values = [loggedUserId]

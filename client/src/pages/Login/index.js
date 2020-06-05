@@ -33,7 +33,7 @@ export default () => {
     document.cookie = name + '=' + value + ';' + expires + ';path=/'
   }
 
-  // Register user
+  // Login user
   const loginUser = async (event) => {
     event.preventDefault()
     try {
