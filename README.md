@@ -1,6 +1,6 @@
 # Picter
 
-> A photo sharing application made using MERN stack
+> A photo sharing application made using PERN stack
 
 <img src='https://user-images.githubusercontent.com/28904556/83858297-e8448300-a739-11ea-873e-a1dc46189780.png' width='1440' alt='Picter app home page'/>
 
